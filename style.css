@@ -1083,19 +1083,6 @@ section {
   line-height: 1.6;
 }
 
-/* Scroll 2: Blur In */
-.scroll-blur-in {
-  opacity: 0;
-  filter: blur(12px);
-  transform: translateY(24px);
-  transition: opacity 0.75s var(--ease-out-expo), filter 0.75s var(--ease-out-expo), transform 0.75s var(--ease-out-expo);
-}
-
-.scroll-blur-in.revealed {
-  opacity: 1;
-  filter: none;
-  transform: none;
-}
 
 /* --- PROFIL: BESPOKE BENTO ARCHITECTURE --- */
 .profil-bento {
@@ -1337,9 +1324,7 @@ section {
 }
 
 .timeline-card {
-  position: sticky;
-  top: calc(90px + var(--stack-index, 0) * 16px);
-  z-index: calc(5 + var(--stack-index, 0));
+  position: relative;
   background: rgba(255, 255, 255, 0.72);
   backdrop-filter: blur(28px) saturate(200%);
   -webkit-backdrop-filter: blur(28px) saturate(200%);
@@ -1478,19 +1463,6 @@ section {
   transform: scale(1.06);
 }
 
-/* Scroll 8: Mask Reveal for Gallery Images */
-.mask-reveal {
-  clip-path: inset(8% 8% 8% 8% round 24px);
-  filter: blur(8px);
-  opacity: 0.7;
-  transition: clip-path 0.75s var(--ease-out-expo), filter 0.75s var(--ease-out-expo), opacity 0.75s var(--ease-out-expo);
-}
-
-.mask-reveal.revealed {
-  clip-path: inset(0% 0% 0% 0% round 24px);
-  filter: none;
-  opacity: 1;
-}
 
 .galeri-overlay {
   position: absolute;
@@ -2067,24 +2039,8 @@ nav .links a.active {
   background: rgba(255, 255, 255, 0.22); color: #FFFFFF;
   box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.45);
 }
-/* Staggered card reveal: pakai `translate` agar tidak bentrok dengan tilt (transform) */
-.rv-card {
-  transition: opacity 0.8s var(--ease-out-expo) var(--d, 0s), translate 0.8s var(--ease-out-expo) var(--d, 0s),
-    transform 0.85s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.85s cubic-bezier(0.16, 1, 0.3, 1),
-    background 0.32s ease, border-color 0.32s ease;
-}
-.rv-card:not(.in) { opacity: 0; translate: 0 32px; }
-.rv-card.in { opacity: 1; translate: 0 0; }
-/* Kedalaman tumpukan kartu rutinitas: kartu di bawah mengecil saat tertimpa */
-.timeline-card {
-  scale: calc(1 - var(--k, 0) * 0.05); opacity: calc(1 - var(--k, 0) * 0.35);
-  transform-origin: center top;
-}
-/* Hero: konten naik & memudar saat scroll */
-.hero { --hp: 0; }
-.hero-inner { translate: 0 calc(var(--hp) * -48px); opacity: calc(1 - var(--hp) * 0.85); }
-.hero .orb.o1 { translate: 0 calc(var(--hp) * -90px); }
-.hero-architectural-title { translate: calc(var(--hp) * -70px) 0; }
+/* Orb hero: parallax lewat variabel (transform dipakai animasi floatMarble) */
+.hero .orb.o1 { translate: 0 var(--orb-y, 0px); }
 /* Galeri di HP: geser horizontal dengan snap */
 @media (max-width: 768px) {
   .galeri-grid {
@@ -2093,36 +2049,13 @@ nav .links a.active {
   }
   .galeri-grid::-webkit-scrollbar { display: none; }
   .galeri-item { flex: 0 0 82%; height: 300px; scroll-snap-align: center; }
-  .galeri-item.mask-reveal { clip-path: none; filter: none; opacity: 1; }
 }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
-  .rv-card:not(.in) { opacity: 1; translate: none; }
-  .rv-card { transition: none; }
-  .scroll-blur-in, .mask-reveal { opacity: 1; filter: none; transform: none; clip-path: none; transition: none; }
-  .timeline-card { scale: none; opacity: 1; }
-  .hero-inner, .hero .orb.o1, .hero-architectural-title { translate: none; opacity: 1; }
   .hero-parallax-bg { transform: none !important; }
 }
 
-/* ===== STICKY STACKING SECTIONS ===== */
-.stack-anchor { display: block; height: 0; margin: 0; padding: 0; pointer-events: none; }
-.stack-sec, .stack-rel {
-  z-index: var(--z, 11);
-  border-radius: 32px 32px 0 0;
-  box-shadow: 0 -24px 60px -24px rgba(5, 22, 10, 0.38);
-}
-.stack-sec { position: sticky; top: 0; }
-.stack-rel { position: relative; }
-/* Section di bawah gelap halus saat tertimpa section berikutnya */
-.stack-sec::after {
-  content: ""; position: absolute; inset: 0; z-index: 60; pointer-events: none;
-  border-radius: inherit; background: #031007; opacity: calc(var(--cover, 0) * 0.45);
-}
-footer { position: relative; z-index: 30; }
-@media (max-width: 640px) {
-  .stack-sec, .stack-rel { border-radius: 22px 22px 0 0; box-shadow: 0 -14px 36px -16px rgba(5, 22, 10, 0.4); }
-}
+footer { position: relative; }
 
 /* ===== GLASS BOTTOM NAV (bubble + cekungan yang bergeser) ===== */
 .gnav {
@@ -2445,4 +2378,32 @@ a:focus-visible, button:focus-visible {
   .lokasi-card { padding: 28px 20px; }
   .visi-card-hero { padding: 30px 22px; }
   .hero-actions .btn { white-space: normal; text-align: center; }
+}
+
+/* =========================================================================
+   v8 — Timeline pembiasaan (garis progres, digerakkan GSAP ScrollTrigger)
+   ========================================================================= */
+.timeline-stack { padding-left: 48px; gap: 18px; }
+.timeline-line {
+  position: absolute; left: 16px; top: 12px; bottom: 12px; width: 3px;
+  border-radius: 3px; background: rgba(10, 34, 15, 0.1); overflow: hidden;
+}
+.timeline-line-fill {
+  position: absolute; inset: 0; transform-origin: 50% 0;
+  background: linear-gradient(180deg, #C9E58A 0%, #3F8A5D 55%, #008069 100%);
+}
+.timeline-card::before {
+  content: ""; position: absolute; left: -41px; top: 34px; width: 19px; height: 19px; border-radius: 50%;
+  background: var(--canvas-light); border: 3px solid rgba(10, 34, 15, 0.2);
+  transition: background 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease, transform 0.35s var(--ease-spring);
+}
+.timeline-card.is-active::before {
+  background: var(--accent-lime); border-color: #008069;
+  box-shadow: 0 0 0 6px rgba(226, 241, 158, 0.5); transform: scale(1.1);
+}
+@media (max-width: 640px) {
+  .timeline-stack { padding-left: 34px; }
+  .timeline-line { left: 10px; }
+  .timeline-card { padding: 24px 22px; }
+  .timeline-card::before { left: -32px; top: 28px; width: 17px; height: 17px; }
 }

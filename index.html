@@ -38,7 +38,7 @@
     href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap"
     rel="stylesheet">
 
-  <link rel="stylesheet" href="style.css?v=7">
+  <link rel="stylesheet" href="style.css?v=8">
 
   <!-- Preloader hanya tampil sekali per sesi & dilewati bila pengguna memilih kurangi animasi -->
   <script>
@@ -51,7 +51,6 @@
     <style>
       #app-preloader { display: none }
       body.preloader-active { overflow: auto }
-      .scroll-blur-in, .mask-reveal { opacity: 1; filter: none; transform: none; clip-path: none }
     </style>
   </noscript>
 
@@ -357,7 +356,7 @@
          ========================================================================= -->
     <section id="profil" class="bg-mesh-canvas">
       <div class="wrap">
-        <div class="section-head scroll-blur-in">
+        <div class="section-head">
           <span class="chip chip-light">PROFIL &amp; VISI SEKOLAH</span>
           <h2 class="section-title">Mendidik Generasi Berakhlaq Mulia</h2>
           <p class="section-desc">
@@ -419,7 +418,7 @@
          ========================================================================= -->
     <section id="program">
       <div class="wrap">
-        <div class="section-head scroll-blur-in">
+        <div class="section-head">
           <span class="chip chip-light">4 PILAR KURIKULUM</span>
           <h2 class="section-title">Program Unggulan Terpadu</h2>
           <p class="section-desc">
@@ -492,7 +491,7 @@
          ========================================================================= -->
     <section id="pembiasaan">
       <div class="wrap">
-        <div class="section-head scroll-blur-in">
+        <div class="section-head">
           <span class="chip chip-light">PEMBIASAAN &amp; ADAB SUNNAH</span>
           <h2 class="section-title">Karakter &amp; Amalan Yaumiyah</h2>
           <p class="section-desc">
@@ -502,7 +501,8 @@
         </div>
 
         <div class="timeline-stack">
-          <div class="timeline-card" style="--stack-index: 0;">
+          <div class="timeline-line" aria-hidden="true"><span class="timeline-line-fill"></span></div>
+          <div class="timeline-card">
             <div class="timeline-card-header">
               <span class="timeline-time-badge">07.15 – 08.15 WIB</span>
               <span class="stats-pill-mini">Halaqah Ikhwan &amp; Akhwat Terpisah</span>
@@ -511,7 +511,7 @@
             <p>Talaqqi makharijul huruf bersama asatidz hafidz dan setoran hafalan saat konsentrasi pikiran masih
               jernih dan segar.</p>
           </div>
-          <div class="timeline-card" style="--stack-index: 1;">
+          <div class="timeline-card">
             <div class="timeline-card-header">
               <span class="timeline-time-badge">08.15 – 08.35 WIB</span>
               <span class="stats-pill-mini">Penanaman Rutinitas Sunnah</span>
@@ -520,7 +520,7 @@
             <p>Pembiasaan shalat sunnah dhuha berjamaah dan lantunan dzikir pagi Al-Ma'tsurat demi kelapangan hati dan
               keberkahan ilmu.</p>
           </div>
-          <div class="timeline-card" style="--stack-index: 2;">
+          <div class="timeline-card">
             <div class="timeline-card-header">
               <span class="timeline-time-badge">08.35 – 12.00 WIB</span>
               <span class="stats-pill-mini">Multimedia Smart Classroom</span>
@@ -529,7 +529,7 @@
             <p>Pendalaman kurikulum nasional (IPA, Matematika, Bahasa) serta materi diniyah aqidah dan fiqh ibadah di
               ruang kelas full AC.</p>
           </div>
-          <div class="timeline-card" style="--stack-index: 3;">
+          <div class="timeline-card">
             <div class="timeline-card-header">
               <span class="timeline-time-badge">12.00 – 13.00 WIB</span>
               <span class="stats-pill-mini">Adab Islami &amp; Kebersamaan</span>
@@ -538,7 +538,7 @@
             <p>Shalat Zhuhur berjamaah, dilanjutkan istirahat dan makan siang bersama dengan penanaman adab makan sunnah
               Rasulullah.</p>
           </div>
-          <div class="timeline-card" style="--stack-index: 4;">
+          <div class="timeline-card">
             <div class="timeline-card-header">
               <span class="timeline-time-badge">13.00 – 15.30 WIB</span>
               <span class="stats-pill-mini">Kemandirian &amp; Perlindungan Doa</span>
@@ -556,7 +556,7 @@
          ========================================================================= -->
     <section id="fasilitas">
       <div class="wrap">
-        <div class="section-head scroll-blur-in">
+        <div class="section-head">
           <span class="chip chip-light">SARANA PENDIDIKAN</span>
           <h2 class="section-title">Fasilitas Nyaman &amp; Representatif</h2>
           <p class="section-desc">
@@ -620,7 +620,7 @@
          ========================================================================= -->
     <section id="galeri">
       <div class="wrap">
-        <div class="section-head scroll-blur-in">
+        <div class="section-head">
           <span class="chip">DOKUMENTASI SEKOLAH</span>
           <h2 class="section-title">Galeri Fasilitas &amp; Aktivitas</h2>
           <p class="section-desc">
@@ -630,7 +630,7 @@
         </div>
 
         <div class="galeri-grid" id="galeriGrid">
-          <button type="button" class="galeri-item mask-reveal" data-full="img/foto4-1080.webp"
+          <button type="button" class="galeri-item" data-full="img/foto4-1080.webp"
             data-cat="Gedung Milik Sendiri" data-title="Gedung SMP Al Haudh Islamic School, Ciater">
             <img src="img/foto4-640.webp" srcset="img/foto4-640.webp 640w, img/foto4-1080.webp 1080w"
               sizes="(max-width: 768px) 82vw, 600px" width="640" height="800" loading="lazy" decoding="async"
@@ -638,7 +638,7 @@
             <span class="galeri-overlay"><span class="galeri-badge">Gedung Milik Sendiri</span><span
                 class="galeri-caption">Gedung SMP Al Haudh Islamic School, Ciater</span></span>
           </button>
-          <button type="button" class="galeri-item mask-reveal" data-full="img/foto2-1080.webp"
+          <button type="button" class="galeri-item" data-full="img/foto2-1080.webp"
             data-cat="Gedung Bertingkat" data-title="Gedung Permanen Bertingkat Milik Yayasan">
             <img src="img/foto2-400.webp" srcset="img/foto2-400.webp 400w, img/foto2-640.webp 640w"
               sizes="(max-width: 768px) 82vw, 300px" width="400" height="500" loading="lazy" decoding="async"
@@ -646,7 +646,7 @@
             <span class="galeri-overlay"><span class="galeri-badge">Gedung Bertingkat</span><span
                 class="galeri-caption">Gedung Permanen Milik Yayasan</span></span>
           </button>
-          <button type="button" class="galeri-item mask-reveal" data-full="img/foto6-1080.webp"
+          <button type="button" class="galeri-item" data-full="img/foto6-1080.webp"
             data-cat="Ruang Kelas" data-title="Kelas dengan Smart Screen Multimedia">
             <img src="img/foto6-400.webp" srcset="img/foto6-400.webp 400w, img/foto6-640.webp 640w"
               sizes="(max-width: 768px) 82vw, 300px" width="400" height="500" loading="lazy" decoding="async"
@@ -654,7 +654,7 @@
             <span class="galeri-overlay"><span class="galeri-badge">Ruang Kelas</span><span
                 class="galeri-caption">Smart Screen Multimedia</span></span>
           </button>
-          <button type="button" class="galeri-item mask-reveal" data-full="img/foto5-1080.webp"
+          <button type="button" class="galeri-item" data-full="img/foto5-1080.webp"
             data-cat="Ruang Ber-AC" data-title="Ruang Belajar Ber-AC yang Bersih">
             <img src="img/foto5-400.webp" srcset="img/foto5-400.webp 400w, img/foto5-640.webp 640w"
               sizes="(max-width: 768px) 82vw, 300px" width="400" height="500" loading="lazy" decoding="async"
@@ -662,7 +662,7 @@
             <span class="galeri-overlay"><span class="galeri-badge">Ruang Ber-AC</span><span
                 class="galeri-caption">Ruang Belajar Bersih &amp; Sejuk</span></span>
           </button>
-          <button type="button" class="galeri-item mask-reveal" data-full="img/foto1-1080.webp"
+          <button type="button" class="galeri-item" data-full="img/foto1-1080.webp"
             data-cat="Sarana Ibadah" data-title="Tempat Wudhu Siswa">
             <img src="img/foto1-400.webp" srcset="img/foto1-400.webp 400w, img/foto1-640.webp 640w"
               sizes="(max-width: 768px) 82vw, 300px" width="400" height="500" loading="lazy" decoding="async"
@@ -670,7 +670,7 @@
             <span class="galeri-overlay"><span class="galeri-badge">Sarana Ibadah</span><span
                 class="galeri-caption">Tempat Wudhu Siswa</span></span>
           </button>
-          <button type="button" class="galeri-item mask-reveal" data-full="img/foto3-1080.webp"
+          <button type="button" class="galeri-item" data-full="img/foto3-1080.webp"
             data-cat="Kebersihan" data-title="Wastafel Cuci Tangan">
             <img src="img/foto3-400.webp" srcset="img/foto3-400.webp 400w, img/foto3-640.webp 640w"
               sizes="(max-width: 768px) 82vw, 300px" width="400" height="500" loading="lazy" decoding="async"
@@ -678,7 +678,7 @@
             <span class="galeri-overlay"><span class="galeri-badge">Kebersihan</span><span
                 class="galeri-caption">Wastafel Cuci Tangan</span></span>
           </button>
-          <button type="button" class="galeri-item mask-reveal" data-full="img/outing3-1080.webp"
+          <button type="button" class="galeri-item" data-full="img/outing3-1080.webp"
             data-cat="Outing Class Ikhwan" data-title="Darma Wisata: Learning Through Experience">
             <img src="img/outing3-400.webp" srcset="img/outing3-400.webp 400w, img/outing3-640.webp 640w"
               sizes="(max-width: 768px) 82vw, 300px" width="400" height="500" loading="lazy" decoding="async"
@@ -686,7 +686,7 @@
             <span class="galeri-overlay"><span class="galeri-badge">Outing Class Ikhwan</span><span
                 class="galeri-caption">Darma Wisata Siswa</span></span>
           </button>
-          <button type="button" class="galeri-item mask-reveal" data-full="img/outing7-1080.webp"
+          <button type="button" class="galeri-item" data-full="img/outing7-1080.webp"
             data-cat="Outing Class Akhwat" data-title="Darma Wisata Siswi Akhwat">
             <img src="img/outing7-400.webp" srcset="img/outing7-400.webp 400w, img/outing7-640.webp 640w"
               sizes="(max-width: 768px) 82vw, 300px" width="400" height="500" loading="lazy" decoding="async"
@@ -694,7 +694,7 @@
             <span class="galeri-overlay"><span class="galeri-badge">Outing Class Akhwat</span><span
                 class="galeri-caption">Darma Wisata Siswi</span></span>
           </button>
-          <button type="button" class="galeri-item mask-reveal" data-full="img/outing1-1080.webp"
+          <button type="button" class="galeri-item" data-full="img/outing1-1080.webp"
             data-cat="Outbound" data-title="Menara Tantangan Ketinggian">
             <img src="img/outing1-400.webp" srcset="img/outing1-400.webp 400w, img/outing1-640.webp 640w"
               sizes="(max-width: 768px) 82vw, 300px" width="400" height="500" loading="lazy" decoding="async"
@@ -702,7 +702,7 @@
             <span class="galeri-overlay"><span class="galeri-badge">Outbound</span><span
                 class="galeri-caption">Menara Tantangan Ketinggian</span></span>
           </button>
-          <button type="button" class="galeri-item mask-reveal" data-full="img/outing4-1080.webp"
+          <button type="button" class="galeri-item" data-full="img/outing4-1080.webp"
             data-cat="Outbound" data-title="Rintangan Jaring di Atas Kolam">
             <img src="img/outing4-400.webp" srcset="img/outing4-400.webp 400w, img/outing4-640.webp 640w"
               sizes="(max-width: 768px) 82vw, 300px" width="400" height="500" loading="lazy" decoding="async"
@@ -710,7 +710,7 @@
             <span class="galeri-overlay"><span class="galeri-badge">Outbound</span><span
                 class="galeri-caption">Rintangan Jaring di Atas Kolam</span></span>
           </button>
-          <button type="button" class="galeri-item mask-reveal" data-full="img/outing6-1080.webp"
+          <button type="button" class="galeri-item" data-full="img/outing6-1080.webp"
             data-cat="Outbound" data-title="Titian Tali &amp; Kerja Sama Tim">
             <img src="img/outing6-400.webp" srcset="img/outing6-400.webp 400w, img/outing6-640.webp 640w"
               sizes="(max-width: 768px) 82vw, 300px" width="400" height="500" loading="lazy" decoding="async"
@@ -718,7 +718,7 @@
             <span class="galeri-overlay"><span class="galeri-badge">Outbound</span><span
                 class="galeri-caption">Titian Tali &amp; Kerja Sama Tim</span></span>
           </button>
-          <button type="button" class="galeri-item mask-reveal" data-full="img/outing5-1080.webp"
+          <button type="button" class="galeri-item" data-full="img/outing5-1080.webp"
             data-cat="Outbound" data-title="Rintangan Jaring Tali">
             <img src="img/outing5-400.webp" srcset="img/outing5-400.webp 400w, img/outing5-640.webp 640w"
               sizes="(max-width: 768px) 82vw, 300px" width="400" height="500" loading="lazy" decoding="async"
@@ -726,7 +726,7 @@
             <span class="galeri-overlay"><span class="galeri-badge">Outbound</span><span
                 class="galeri-caption">Rintangan Jaring Tali</span></span>
           </button>
-          <button type="button" class="galeri-item mask-reveal" data-full="img/outing2-1080.webp"
+          <button type="button" class="galeri-item" data-full="img/outing2-1080.webp"
             data-cat="Outing Class" data-title="Diskusi Kelompok Siswa">
             <img src="img/outing2-400.webp" srcset="img/outing2-400.webp 400w, img/outing2-640.webp 640w"
               sizes="(max-width: 768px) 82vw, 300px" width="400" height="500" loading="lazy" decoding="async"
@@ -745,7 +745,7 @@
          ========================================================================= -->
     <section id="lokasi" class="bg-mesh-canvas">
       <div class="wrap">
-        <div class="section-head scroll-blur-in">
+        <div class="section-head">
           <span class="chip chip-light">LOKASI &amp; KUNJUNGAN SEKOLAH</span>
           <h2 class="section-title">Akses Lokasi &amp; Peta Sekolah</h2>
           <p class="section-desc">
@@ -905,7 +905,7 @@
          ========================================================================= -->
     <section id="faq">
       <div class="wrap">
-        <div class="section-head scroll-blur-in">
+        <div class="section-head">
           <span class="chip chip-light">TANYA JAWAB</span>
           <h2 class="section-title">Pertanyaan Sering Diajukan</h2>
           <p class="section-desc">
@@ -1191,7 +1191,10 @@
     </div>
   </div>
 
-  <script src="script.js?v=7" defer></script>
+  <!-- GSAP + ScrollTrigger (disimpan lokal di /vendor, tanpa CDN pihak ketiga) -->
+  <script src="vendor/gsap.min.js" defer></script>
+  <script src="vendor/ScrollTrigger.min.js" defer></script>
+  <script src="script.js?v=8" defer></script>
 </body>
 
 </html>

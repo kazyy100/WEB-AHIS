@@ -1,6 +1,7 @@
-/* SMP Al Haudh — interaksi halaman (v7)
+/* SMP Al Haudh — interaksi halaman (v8)
    Catatan performa:
-   - Semua efek scroll dijalankan dalam SATU requestAnimationFrame: baca layout dulu, baru tulis
+   - Animasi scroll memakai GSAP + ScrollTrigger (file lokal di /vendor).
+   - Efek scroll ringan lain dijalankan dalam SATU requestAnimationFrame: baca layout dulu, baru tulis
      (menghindari "layout thrashing").
    - Efek tilt 3D hanya untuk perangkat dengan mouse.
    - Preloader tidak lagi menahan 2 detik: terangkat begitu halaman siap (maks. 1,5 dtk), dan hanya sekali per sesi.
@@ -14,6 +15,8 @@
   const body = document.body;
   const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const finePointer = matchMedia('(hover: hover) and (pointer: fine)').matches;
+  const hasGSAP = !!(window.gsap && window.ScrollTrigger);
+  let curtainShown = false, curtainLifted = false, onCurtainLift = null;
 
   /* ------------------------------------------------------------------
      0. Curtain preloader
@@ -27,6 +30,7 @@
       return;
     }
     try { sessionStorage.setItem('ah-seen', '1'); } catch (e) { }
+    curtainShown = true;
 
     const MIN_MS = 750;   // cukup untuk animasi logo masuk
     const MAX_MS = 1500;  // batas atas, apa pun yang terjadi
@@ -34,8 +38,10 @@
     function lift() {
       if (lifted) return;
       lifted = true;
+      curtainLifted = true;
       curtain.classList.add('lift-up');
       release();
+      if (onCurtainLift) onCurtainLift();
       setTimeout(() => curtain.remove(), 1100);
     }
     const wait = ms => new Promise(r => setTimeout(r, Math.max(0, ms)));
@@ -196,8 +202,7 @@
     });
     if (focus) tabs[index].focus();
     showcase.setAttribute('aria-labelledby', tabs[index].id);
-    showcase.style.opacity = '0.4';
-    setTimeout(() => {
+    const fill = () => {
       $('#progPillarTag').textContent = data.tag;
       $('#progTitle').textContent = data.title;
       $('#progDesc').textContent = data.desc;
@@ -211,8 +216,19 @@
         li.lastChild.textContent = f;
         list.appendChild(li);
       });
-      showcase.style.opacity = '1';
-    }, 150);
+    };
+    if (hasGSAP && !reduceMotion) {
+      const parts = ['#progPillarTag', '#progTitle', '#progDesc', '#progFeatureList', '.prog-actions', '.program-preview-card'];
+      window.gsap.to(parts, {
+        opacity: 0, y: -10, duration: 0.18, stagger: 0.02, ease: 'power2.in', overwrite: true,
+        onComplete: () => {
+          fill();
+          window.gsap.fromTo(parts, { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.5, stagger: 0.05, ease: 'power3.out', clearProps: 'transform' });
+        }
+      });
+    } else {
+      fill();
+    }
   }
   tabs.forEach((btn, i) => {
     btn.addEventListener('click', () => switchProgramTab(i));
@@ -342,57 +358,9 @@
   }
 
   /* ------------------------------------------------------------------
-     8. Count-up, reveal, stagger (IntersectionObserver)
+     8. IntersectionObserver (dipakai peta)
      ------------------------------------------------------------------ */
   const hasIO = 'IntersectionObserver' in window;
-
-  function animateCounter(el, target, duration = 1200) {
-    const t0 = performance.now();
-    (function step(t) {
-      const p = Math.min((t - t0) / duration, 1);
-      el.textContent = p < 1 ? Math.floor((1 - Math.pow(1 - p, 3)) * target) : target;
-      if (p < 1) requestAnimationFrame(step);
-    })(t0);
-  }
-  if (hasIO && !reduceMotion) {
-    const countIO = new IntersectionObserver(entries => entries.forEach(en => {
-      if (!en.isIntersecting) return;
-      countIO.unobserve(en.target);
-      animateCounter(en.target, parseInt(en.target.dataset.target, 10));
-    }), { threshold: 0.5 });
-    $$('.counter-num[data-target]').forEach(el => {
-      // hanya animasikan angka yang belum terlihat saat halaman dibuka
-      if (el.getBoundingClientRect().top > innerHeight) el.textContent = '0';
-      countIO.observe(el);
-    });
-  }
-
-  const revealEls = $$('.scroll-blur-in, .mask-reveal');
-  if (hasIO && !reduceMotion) {
-    const revealIO = new IntersectionObserver(entries => entries.forEach(en => {
-      if (!en.isIntersecting) return;
-      en.target.classList.add('revealed');
-      revealIO.unobserve(en.target);
-    }), { threshold: 0.15 });
-    revealEls.forEach(el => revealIO.observe(el));
-  } else {
-    revealEls.forEach(el => el.classList.add('revealed'));
-  }
-
-  (function stagger() {
-    const sel = '.stats-card,.visi-card-hero,.misi-tile,.facility-card,.lokasi-card,.faq-card,.spmb-info-panel,.spmb-poster-box,.spmb-step';
-    const els = $$(sel);
-    if (!hasIO || reduceMotion) return;
-    els.forEach(el => {
-      const sibs = Array.from(el.parentElement.children).filter(c => c.matches(sel));
-      el.style.setProperty('--d', (Math.max(0, sibs.indexOf(el)) % 4) * 0.09 + 's');
-      el.classList.add('rv-card');
-    });
-    const io = new IntersectionObserver(es => es.forEach(e => {
-      if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
-    }), { threshold: 0.12, rootMargin: '0px 0px -6% 0px' });
-    els.forEach(el => io.observe(el));
-  })();
 
   /* ------------------------------------------------------------------
      9. Peta Google dimuat saat hampir terlihat
@@ -413,46 +381,19 @@
   })();
 
   /* ------------------------------------------------------------------
-     10. Sticky stacking sections + anchor halus
+     10. Anchor halus
      ------------------------------------------------------------------ */
   const navbar = $('#navbar');
   const hero = $('.hero');
-  const heroBg = $('.hero-parallax-bg');
   const bar = $('#scrollProgress');
-  const tcards = $$('.timeline-card');
-  const footer = $('footer');
   const navLinks = $$('nav .links a[href^="#"]');
-
   const secIds = ['profil', 'program', 'pembiasaan', 'fasilitas', 'galeri', 'lokasi', 'spmb', 'faq'];
-  const stickyIds = ['profil', 'program', 'fasilitas', 'galeri', 'lokasi', 'spmb', 'faq']; // pembiasaan punya tumpukan kartu sendiri
   const secs = secIds.map(id => document.getElementById(id)).filter(Boolean);
-  const anchors = new Map();
-
-  secs.forEach((s, i) => {
-    s.style.setProperty('--z', 11 + i);
-    if (reduceMotion) return;
-    if (stickyIds.includes(s.id)) {
-      s.classList.add('stack-sec');
-      const a = document.createElement('span'); // penanda posisi normal (untuk anchor & scrollspy)
-      a.className = 'stack-anchor';
-      s.parentNode.insertBefore(a, s);
-      anchors.set(s.id, a);
-    } else {
-      s.classList.add('stack-rel');
-    }
-  });
-  const refOf = id => anchors.get(id) || document.getElementById(id);
-
-  function setTops() {
-    secs.forEach(s => {
-      if (s.classList.contains('stack-sec')) s.style.top = Math.min(0, innerHeight - s.offsetHeight) + 'px';
-    });
-  }
 
   function scrollToId(id) {
-    const r = id === 'beranda' ? null : refOf(id);
+    const el = id === 'beranda' ? null : document.getElementById(id);
     const pad = parseFloat(getComputedStyle(root).scrollPaddingTop) || 0;
-    const top = r ? r.getBoundingClientRect().top + scrollY - pad : 0;
+    const top = el ? el.getBoundingClientRect().top + scrollY - pad : 0;
     scrollTo({ top, behavior: reduceMotion ? 'auto' : 'smooth' });
     try { history.replaceState(null, '', '#' + id); } catch (_) { }
   }
@@ -471,7 +412,7 @@
   }));
 
   /* ------------------------------------------------------------------
-     11. SATU loop scroll untuk semua efek (baca dulu → tulis kemudian)
+     11. Satu loop scroll ringan: navbar, progress bar, scrollspy (baca dulu → tulis)
      ------------------------------------------------------------------ */
   const scrollSubs = [];
   let ticking = false;
@@ -482,54 +423,124 @@
     const y = scrollY, vh = innerHeight;
     const docH = root.scrollHeight - vh;
     const heroH = hero ? hero.offsetHeight : 0;
-    const tRects = tcards.map(c => c.getBoundingClientRect());
-    const secTops = secs.map(s => refOf(s.id).getBoundingClientRect().top);
-    const nextTops = secs.map((s, i) => {
-      if (!s.classList.contains('stack-sec')) return null;
-      const n = secs[i + 1] || footer;
-      return n ? n.getBoundingClientRect().top : null;
-    });
+    const secTops = secs.map(s => s.getBoundingClientRect().top);
     // ---------- TULIS ----------
     if (navbar) navbar.classList.toggle('scrolled', y > 30);
     if (bar) bar.style.transform = 'scaleX(' + (docH > 0 ? Math.min(1, y / docH) : 0) + ')';
     body.classList.toggle('past-hero', y > heroH * 0.6);
-
-    if (!reduceMotion && hero && y < heroH * 1.2) {
-      hero.style.setProperty('--hp', Math.min(1, Math.max(0, y / (heroH * 0.8))).toFixed(3));
-      if (heroBg) heroBg.style.transform = 'scale(' + Math.max(1, 1.1 - y * 0.00015).toFixed(4) + ')';
-    }
-
-    tcards.forEach((c, i) => {
-      const n = tRects[i + 1];
-      const cr = tRects[i];
-      const k = n ? Math.min(1, Math.max(0, (cr.bottom - n.top) / Math.max(1, cr.height - 20))) : 0;
-      c.style.setProperty('--k', k.toFixed(3));
-    });
-
     let cur = null;
-    secs.forEach((s, i) => {
-      if (secTops[i] <= vh * 0.45) cur = s.id;
-      if (nextTops[i] !== null) {
-        const k = Math.min(1, Math.max(0, 1 - nextTops[i] / vh));
-        s.style.setProperty('--cover', k.toFixed(3));
-      }
-    });
+    secs.forEach((s, i) => { if (secTops[i] <= vh * 0.45) cur = s.id; });
     if (!window.__navLock) navLinks.forEach(a => a.classList.toggle('active', a.getAttribute('href').slice(1) === cur));
-
     scrollSubs.forEach(fn => fn(secTops, vh));
   }
   function requestFrame() { if (!ticking) { ticking = true; requestAnimationFrame(frame); } }
-  function relayout() { setTops(); requestFrame(); }
-
   addEventListener('scroll', requestFrame, { passive: true });
-  addEventListener('resize', relayout);
-  addEventListener('load', relayout);
-  if ('ResizeObserver' in window) {
-    let rq = 0;
-    const ro = new ResizeObserver(() => { cancelAnimationFrame(rq); rq = requestAnimationFrame(relayout); });
-    secs.forEach(s => ro.observe(s));
-  }
-  relayout();
+  addEventListener('resize', requestFrame);
+  addEventListener('load', requestFrame);
+  requestFrame();
+
+  /* ------------------------------------------------------------------
+     11b. Animasi scroll — GSAP + ScrollTrigger
+          Tanpa GSAP atau saat "kurangi animasi" aktif → konten langsung tampil apa adanya.
+          Tidak ada lagi section/kartu yang saling menimpa.
+     ------------------------------------------------------------------ */
+  (function motion() {
+    if (!hasGSAP) return;
+    const { gsap, ScrollTrigger } = window;
+    gsap.registerPlugin(ScrollTrigger);
+    const mm = gsap.matchMedia();
+
+    mm.add('(prefers-reduced-motion: no-preference)', () => {
+      const ease = 'power3.out';
+
+      // --- Intro hero: hanya saat tirai preloader tampil (kunjungan pertama) ---
+      if (curtainShown && !curtainLifted) {
+        const intro = gsap.timeline({ paused: true, defaults: { ease, duration: 0.95 } })
+          .from('.hero-inner > *', { y: 36, opacity: 0, stagger: 0.09 }, 0.2)
+          .from('.hero .orb.o1', { opacity: 0, duration: 0.8 }, 0.3)
+          .from('.hero .orb.o1 img', { scale: 0.6, rotation: -18, duration: 1.2, ease: 'back.out(1.7)' }, 0.3)
+          .from('.hero-architectural-title', { xPercent: -8, opacity: 0, duration: 1.3 }, 0.1);
+        onCurtainLift = () => intro.play();
+      }
+
+      // --- Hero parallax (scrub) ---
+      gsap.timeline({ scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: 0.6 } })
+        .fromTo('.hero-parallax-bg', { scale: 1.1, yPercent: 0 }, { scale: 1.1, yPercent: 14, ease: 'none' }, 0)
+        .to('.hero-inner', { y: -80, opacity: 0.1, ease: 'none' }, 0)
+        .to('.hero-architectural-title', { x: -120, ease: 'none' }, 0)
+        .to('.hero .orb.o1', { '--orb-y': '-120px', ease: 'none' }, 0)
+        .to('.scroll-indicator', { opacity: 0, ease: 'none', duration: 0.15 }, 0);
+
+      // --- Judul section: chip → judul → deskripsi bergantian ---
+      gsap.utils.toArray('.section-head, .spmb-steps-head').forEach(head => {
+        gsap.from(head.children, {
+          y: 32, opacity: 0, duration: 0.9, ease, stagger: 0.1,
+          scrollTrigger: { trigger: head, start: 'top 86%', once: true }
+        });
+      });
+
+      // --- Kartu muncul berkelompok (ScrollTrigger.batch) ---
+      function reveal(sel, from, opts = {}) {
+        const els = gsap.utils.toArray(sel);
+        if (!els.length) return;
+        // transition CSS dimatikan sementara agar tidak "melawan" tween GSAP
+        gsap.set(els, Object.assign({ opacity: 0, transition: 'none' }, from));
+        ScrollTrigger.batch(els, {
+          start: opts.start || 'top 88%',
+          once: true,
+          onEnter: batch => gsap.to(batch, {
+            x: 0, y: 0, scale: 1, opacity: 1,
+            duration: opts.duration || 0.85, ease, stagger: opts.stagger || 0.09, overwrite: true,
+            onComplete: () => gsap.set(batch, { clearProps: 'transform,opacity,transition' })
+          })
+        });
+      }
+      reveal('.stats-card', { y: 40 }, { start: 'top 99%' });
+      reveal('.visi-card-hero, .misi-tile', { y: 40 });
+      reveal('.program-segmented-bar, .program-showcase-box', { y: 36 });
+      reveal('.timeline-card', { x: 36 });
+      reveal('.facility-card', { y: 40 });
+      reveal('.galeri-item', { y: 50, scale: 0.94 }, { stagger: 0.06, duration: 0.9 });
+      reveal('.lokasi-card, .map-frame-box', { y: 40 });
+      reveal('.spmb-info-panel, .spmb-poster-box', { y: 40 });
+      reveal('.spmb-step', { y: 36 });
+      reveal('.faq-card', { y: 28 }, { stagger: 0.06 });
+
+      // --- Timeline pembiasaan: garis progres + titik aktif ---
+      const stack = $('.timeline-stack');
+      if (stack) {
+        gsap.fromTo('.timeline-line-fill', { scaleY: 0 }, {
+          scaleY: 1, ease: 'none',
+          scrollTrigger: { trigger: stack, start: 'top 62%', end: 'bottom 62%', scrub: 0.4 }
+        });
+        $$('.timeline-card', stack).forEach(card => ScrollTrigger.create({
+          trigger: card, start: 'top+=40 62%',
+          onEnter: () => card.classList.add('is-active'),
+          onLeaveBack: () => card.classList.remove('is-active')
+        }));
+      }
+
+      // --- Angka statistik menghitung naik ---
+      $$('.counter-num[data-target]').forEach(el => {
+        const o = { v: 0 }, target = parseInt(el.dataset.target, 10);
+        el.textContent = '0';
+        gsap.to(o, {
+          v: target, duration: 1.4, ease: 'power2.out',
+          scrollTrigger: { trigger: el, start: 'top 98%', once: true },
+          onUpdate: () => { el.textContent = Math.round(o.v); }
+        });
+      });
+
+      return () => { onCurtainLift = null; };
+    });
+
+    // Tinggi konten berubah (FAQ dibuka, font dimuat, dsb.) → hitung ulang posisi trigger
+    if ('ResizeObserver' in window) {
+      let t = 0;
+      const main = $('main');
+      if (main) new ResizeObserver(() => { clearTimeout(t); t = setTimeout(() => ScrollTrigger.refresh(), 250); }).observe(main);
+    }
+  })();
 
   /* ------------------------------------------------------------------
      12. Glass bottom nav (HP): bubble + cekungan bar yang bergeser
@@ -549,9 +560,9 @@
     const so = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" ';
 
     nav.innerHTML =
-      '<svg class="gnav-fx gnav-shadow" aria-hidden="true"><path id="gnShadow"/></svg>' +
+      '<svg class="gnav-fx gnav-shadow" aria-hidden="true" preserveAspectRatio="none"><path id="gnShadow"/></svg>' +
       '<div class="gnav-glass" id="gnGlass"></div>' +
-      '<svg class="gnav-fx" aria-hidden="true"><defs><linearGradient id="gnGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".75"/><stop offset="1" stop-color="#fff" stop-opacity=".2"/></linearGradient></defs><path id="gnEdge" fill="none" stroke="url(#gnGrad)" stroke-width="1.5"/></svg>' +
+      '<svg class="gnav-fx" aria-hidden="true" preserveAspectRatio="none"><defs><linearGradient id="gnGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".75"/><stop offset="1" stop-color="#fff" stop-opacity=".2"/></linearGradient></defs><path id="gnEdge" fill="none" stroke="url(#gnGrad)" stroke-width="1.5"/></svg>' +
       '<div class="gnav-items" id="gnItems">' + ITEMS.map((it, i) =>
         '<button type="button" class="gnav-btn" data-i="' + i + '" aria-label="' + it.label + '" title="' + it.label + '">' + so + 'class="ic">' + it.ic + '</svg></button>').join('') + '</div>' +
       '<div class="gnav-bubble" id="gnBubble" aria-hidden="true">' + ITEMS.map((it, i) => so + 'class="bi" data-i="' + i + '">' + it.ic + '</svg>').join('') + '</div>';
@@ -588,7 +599,7 @@
     }
     function layout() {
       if (!mq.matches) { W = 0; return; }
-      W = nav.clientWidth; if (!W) return;
+      W = nav.getBoundingClientRect().width; if (!W) return;
       const pad = Math.max(12, (R + HW + 2 - W / 10) / 0.8);
       itemsEl.style.setProperty('--pad', pad + 'px');
       centers = btns.map(b => b.offsetLeft + b.offsetWidth / 2);
@@ -635,8 +646,8 @@
     if (!box) return;
     const mq = matchMedia('(min-width:960px)');
     nav.insertAdjacentHTML('afterbegin',
-      '<svg class="nb-fx nb-shadow" aria-hidden="true"><path/></svg><div class="nb-glass"></div>' +
-      '<svg class="nb-fx" aria-hidden="true"><defs><linearGradient id="nbGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".8"/><stop offset="1" stop-color="#fff" stop-opacity=".22"/></linearGradient></defs><path fill="none" stroke="url(#nbGrad)" stroke-width="1.5"/></svg>');
+      '<svg class="nb-fx nb-shadow" aria-hidden="true" preserveAspectRatio="none"><path/></svg><div class="nb-glass"></div>' +
+      '<svg class="nb-fx" aria-hidden="true" preserveAspectRatio="none"><defs><linearGradient id="nbGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".8"/><stop offset="1" stop-color="#fff" stop-opacity=".22"/></linearGradient></defs><path fill="none" stroke="url(#nbGrad)" stroke-width="1.5"/></svg>');
     const bubble = document.createElement('div'); bubble.className = 'nb-bubble'; bubble.setAttribute('aria-hidden', 'true');
     const txt = document.createElement('span'); bubble.appendChild(txt); nav.appendChild(bubble);
     const [shP, edP] = $$('.nb-fx path', nav), glass = $('.nb-glass', nav), fxs = $$('.nb-fx', nav);
@@ -671,12 +682,16 @@
     }
     function measure(snap) {
       if (!mq.matches) return;
-      W = nav.offsetWidth; H = nav.offsetHeight; if (!W) return;
+      // Lapisan glass/garis tepi diposisikan absolut di dalam padding-box navbar.
+      // Ukur lapisan glass itu sendiri dengan nilai pecahan (getBoundingClientRect) — clientWidth/Height
+      // dibulatkan, dan selisih sekecil 0,3px membuat SVG mengecil & bergeser dari clip-path glass.
+      const gr = glass.getBoundingClientRect();
+      W = gr.width; H = gr.height; if (!W) return;
       fxs.forEach(s => s.setAttribute('viewBox', '0 0 ' + W + ' ' + H));
       const a = $('a.active', box);
       if (a) {
-        const nr = nav.getBoundingClientRect(), r = a.getBoundingClientRect();
-        T.x = r.left - nr.left + r.width / 2; T.w = Math.max(70, r.width + 16); T.d = 1;
+        const r = a.getBoundingClientRect();
+        T.x = r.left - gr.left + r.width / 2; T.w = Math.max(70, r.width + 16); T.d = 1;
         txt.textContent = a.textContent.trim(); nav.classList.add('has-notch');
         if (S.d < 0.02) { S.x = T.x; S.w = T.w; }
       } else { T.d = 0; nav.classList.remove('has-notch'); }
