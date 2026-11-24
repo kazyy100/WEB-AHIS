@@ -1,0 +1,1095 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>SMP Al Haudh – Sekolah Islam Terpadu &amp; Life Skills | Ciater, Serpong</title>
+  <meta name="description"
+    content="SMP Al Haudh Islamic School Ciater, Serpong. Sekolah Menengah Pertama Islam Modern Terpadu bermanhaj Salafus Shalih. Memadukan tahfizhul Qur'an bersanad, kurikulum nasional Kemendikbud, dan kecakapan hidup nyata bagi siswa dan siswi.">
+  <link rel="icon" type="image/png" href="logo.png">
+
+  <!-- Typography: Bricolage Grotesque (Display) + Plus Jakarta Sans & Figtree (Body & UI) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Figtree:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap"
+    rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css?v=6">
+</head>
+
+<body class="preloader-active">
+  <div id="scrollProgress" aria-hidden="true"></div>
+
+  <!-- =========================================================================
+       0. KOROWA-STYLE CURTAIN PRELOADER (SMP AL HAUDH)
+       ========================================================================= -->
+  <div id="app-preloader" class="korowa-curtain" aria-hidden="true">
+    <div class="curtain-content">
+      <img src="logo-white.png" alt="Logo Resmi SMP Al Haudh" class="curtain-logo">
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       NAVIGATION BAR (LIQUID GLASS + 7 BALANCED LINKS + HAMBURGER)
+       ========================================================================= -->
+  <nav id="navbar">
+    <a href="#beranda" class="nav-brand" aria-label="SMP Al Haudh Beranda">
+      <div class="nav-logo">
+        <img src="logo.png" alt="Logo SMP Al Haudh">
+      </div>
+      <b>SMP Al Haudh</b>
+    </a>
+
+    <!-- 7 Balanced Links -->
+    <div class="links">
+      <a href="#profil">Profil</a>
+      <a href="#program">Program</a>
+      <a href="#pembiasaan">Pembiasaan</a>
+      <a href="#fasilitas">Fasilitas</a>
+      <a href="#galeri">Galeri</a>
+      <a href="#lokasi">Lokasi</a>
+      <a href="#spmb">SPMB 2027/28</a>
+      <a href="#faq">FAQ</a>
+    </div>
+
+    <div class="nav-actions">
+      <a class="btn btn-liquid-glass" href="https://e-learning.smpalhaudh.sch.id/" target="_blank"
+        rel="noopener noreferrer" style="min-height: 40px; padding: 8px 16px; font-size: 0.84rem;">
+        E-Learning
+      </a>
+      <button class="btn btn-tactile-lime" onclick="openSpmbModal()"
+        style="min-height: 40px; padding: 8px 18px; font-size: 0.88rem;">
+        Daftar SPMB
+      </button>
+      <button class="nav-hamburger" onclick="toggleMobileMenu()" aria-label="Buka Menu Navigasi">
+        <svg viewBox="0 0 24 24" fill="none">
+          <line x1="4" y1="7" x2="20" y2="7" />
+          <line x1="4" y1="17" x2="20" y2="17" />
+        </svg>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Mobile Glass Dropdown Menu -->
+  <div id="mobileMenu" class="mobile-menu-drawer">
+    <div class="mobile-menu-header">
+      <span class="mobile-menu-title">NAVIGASI SEKOLAH</span>
+      <button onclick="closeMobileMenu()" aria-label="Tutup Menu" style="color:#fff; padding:6px;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <line x1="18" y1="6" x2="6" y2="18" />
+          <line x1="6" y1="6" x2="18" y2="18" />
+        </svg>
+      </button>
+    </div>
+    <div class="mobile-menu-links">
+      <a href="#profil" onclick="closeMobileMenu()">
+        <span>Profil &amp; Visi Sekolah</span>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="9 18 15 12 9 6" />
+        </svg>
+      </a>
+      <a href="#program" onclick="closeMobileMenu()">
+        <span>Program Unggulan Terpadu</span>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="9 18 15 12 9 6" />
+        </svg>
+      </a>
+      <a href="#pembiasaan" onclick="closeMobileMenu()">
+        <span>Pembiasaan &amp; Amalan</span>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="9 18 15 12 9 6" />
+        </svg>
+      </a>
+      <a href="#fasilitas" onclick="closeMobileMenu()">
+        <span>Sarana &amp; Fasilitas</span>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="9 18 15 12 9 6" />
+        </svg>
+      </a>
+      <a href="#galeri" onclick="closeMobileMenu()">
+        <span>Galeri Dokumentasi</span>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="9 18 15 12 9 6" />
+        </svg>
+      </a>
+      <a href="#lokasi" onclick="closeMobileMenu()">
+        <span>Akses &amp; Lokasi Sekolah</span>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="9 18 15 12 9 6" />
+        </svg>
+      </a>
+      <a href="#spmb" onclick="closeMobileMenu()">
+        <span style="color:var(--accent-lime);">SPMB 2027/2028 (Promo 3 Jt)</span>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="9 18 15 12 9 6" />
+        </svg>
+      </a>
+      <a href="#faq" onclick="closeMobileMenu()">
+        <span>Tanya Jawab (FAQ)</span>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="9 18 15 12 9 6" />
+        </svg>
+      </a>
+    </div>
+    <div style="margin-top:auto; padding-top:20px; display:flex; flex-direction:column; gap:10px;">
+      <button class="btn btn-tactile-lime" onclick="closeMobileMenu(); openSpmbModal();" style="width:100%;">
+        Daftar SPMB 2027/2028
+      </button>
+      <a class="btn btn-liquid-glass" href="https://e-learning.smpalhaudh.sch.id/" target="_blank"
+        rel="noopener noreferrer" style="width:100%;">
+        Masuk E-Learning
+      </a>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       HERO SECTION (SOLID DRAWING + ARCHITECTURAL OUTLINE + TACTILE CTA)
+       ========================================================================= -->
+  <section class="hero" id="beranda">
+    <div class="hero-parallax-bg"></div>
+
+    <!-- Architectural Outline Wireframe Title -->
+    <div class="hero-architectural-title">AL HAUDH</div>
+
+    <!-- Solid Drawing: 3D Floating Glass Marble Orb with Official Logo -->
+    <div class="orb o1">
+      <img src="logo.png" alt="Logo Resmi SMP Al Haudh">
+    </div>
+
+    <div class="wrap">
+      <div class="hero-inner">
+        <span class="chip">SPMB 2027/2028 TELAH DIBUKA — GELOMBANG 1</span>
+        <h1 class="hero-h1">Belajar, menghafal, dan berkarya.</h1>
+        <p class="hero-p">
+          Sekolah Menengah Pertama Islam di Ciater, Serpong dengan kurikulum terpadu nasional dan diniyah bermanhaj
+          Salafus Shalih.
+        </p>
+        <div class="hero-actions">
+          <button class="btn btn-tactile-lime" onclick="openSpmbModal()">
+            <span>Daftar SPMB 2027/2028 (Hemat 3 Jt)</span>
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <polyline points="9 18 15 12 9 6" />
+            </svg>
+          </button>
+          <button class="btn btn-liquid-glass" onclick="openPosterModal()">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+              <polyline points="14 2 14 8 20 8" />
+            </svg>
+            <span>Buka Brosur Resmi</span>
+          </button>
+          <a class="btn btn-glass-pill" href="https://e-learning.smpalhaudh.sch.id/" target="_blank"
+            rel="noopener noreferrer">
+            <span>Masuk E-Learning &rarr;</span>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="scroll-indicator">
+      <span>GULIR KE BAWAH</span>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <polyline points="6 9 12 15 18 9" />
+      </svg>
+    </div>
+  </section>
+
+  <!-- =========================================================================
+       5. STATS STRIP: 4 TACTILE LIQUID GLASS CAPSULES (SOLID DRAWING + COUNT UP)
+       ========================================================================= */ -->
+  <div class="stats-strip">
+    <div class="wrap">
+      <div class="stats-grid">
+        <!-- Stats Card 1 -->
+        <div class="stats-card tilt-card">
+          <div class="stats-card-watermark">A</div>
+          <div class="stats-card-top">
+            <span class="stats-tag">BAN-S/M RESMI</span>
+            <div class="stats-ico">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path
+                  d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+              </svg>
+            </div>
+          </div>
+          <div class="stats-val">Peringkat A</div>
+          <p class="stats-desc">Sekolah Terakreditasi Unggul</p>
+          <div class="stats-pills">
+            <span class="stats-pill-mini">NPSN: 69952451</span>
+            <span class="stats-pill-mini">Ijazah Sah Nasional</span>
+          </div>
+        </div>
+
+        <!-- Stats Card 2 -->
+        <div class="stats-card tilt-card">
+          <div class="stats-card-watermark">5</div>
+          <div class="stats-card-top">
+            <span class="stats-tag">TAHFIZH BERSANAD</span>
+            <div class="stats-ico">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+                <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
+              </svg>
+            </div>
+          </div>
+          <div class="stats-val">
+            <span class="counter-num" data-target="5">0</span> Juz Mutqin
+          </div>
+          <p class="stats-desc">Metode Talaqqi Bersanad</p>
+          <div class="stats-pills">
+            <span class="stats-pill-mini">Halaqah Pagi Harian</span>
+            <span class="stats-pill-mini">Syahadah Resmi</span>
+          </div>
+        </div>
+
+        <!-- Stats Card 3 -->
+        <div class="stats-card tilt-card">
+          <div class="stats-card-watermark">3</div>
+          <div class="stats-card-top">
+            <span class="stats-tag">GEDUNG MANDIRI</span>
+            <div class="stats-ico">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="3" width="7" height="7" />
+                <rect x="14" y="3" width="7" height="7" />
+                <rect x="14" y="14" width="7" height="7" />
+                <rect x="3" y="14" width="7" height="7" />
+              </svg>
+            </div>
+          </div>
+          <div class="stats-val">
+            <span class="counter-num" data-target="5">0</span> Lantai
+          </div>
+          <p class="stats-desc">Gedung Milik Sendiri di Ciater</p>
+          <div class="stats-pills">
+            <span class="stats-pill-mini">Kelas Full AC</span>
+            <span class="stats-pill-mini">Smart Multimedia</span>
+          </div>
+        </div>
+
+        <!-- Stats Card 4 -->
+        <div class="stats-card tilt-card">
+          <div class="stats-card-watermark">100</div>
+          <div class="stats-card-top">
+            <span class="stats-tag">ADAB SYAR'I</span>
+            <div class="stats-ico">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                <circle cx="9" cy="7" r="4" />
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+              </svg>
+            </div>
+          </div>
+          <div class="stats-val">
+            <span class="counter-num" data-target="100">0</span>% Terpisah
+          </div>
+          <p class="stats-desc">Kelas Ikhwan &amp; Akhwat</p>
+          <div class="stats-pills">
+            <span class="stats-pill-mini">Adab Terjaga</span>
+            <span class="stats-pill-mini">Fokus Belajar Maksimal</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       6. PROFIL & VISI: ASYMMETRIC BENTO GRID ARCHITECTURE
+       ========================================================================= -->
+  <section id="profil" class="bg-mesh-canvas">
+    <div class="wrap">
+      <div class="section-head scroll-blur-in">
+        <span class="chip chip-light">PROFIL &amp; VISI SEKOLAH</span>
+        <h2 class="section-title">Mendidik Generasi Berakhlaq Mulia</h2>
+        <p class="section-desc">
+          SMP Al Haudh Islamic School berada di bawah naungan Yayasan Al-Haudh di Ciater, Serpong. Kami membina peserta
+          didik dengan keseimbangan antara ilmu syar'i, nalar akademik, dan keahlian vokasi nyata.
+        </p>
+      </div>
+
+      <div class="profil-bento">
+        <!-- Left: Hero Visi Glass Card -->
+        <div class="visi-card-hero tilt-card">
+          <div>
+            <span class="chip chip-light"
+              style="background: rgba(226, 241, 158, 0.45); border-color: rgba(226, 241, 158, 0.7);">VISI
+              PENDIDIKAN</span>
+            <h3 class="visi-quote">
+              "Terwujudnya peserta didik yang berakhlaq mulia dan bermanhaj Salafus Shalih."
+            </h3>
+            <p style="color: var(--text-muted); font-size: 1rem; line-height: 1.6;">
+              Kami meyakini bahwa akhlak mulia dan keteguhan aqidah adalah pondasi paling kokoh bagi setiap pemuda
+              muslim dalam menghadapi tantangan zaman modern.
+            </p>
+          </div>
+          <div style="margin-top: 32px; display: flex; gap: 8px; flex-wrap: wrap;">
+            <span class="stats-pill-mini">NPSN: 69952451</span>
+            <span class="stats-pill-mini">AKREDITASI PERINGKAT A</span>
+            <span class="stats-pill-mini">YAYASAN AL-HAUDH</span>
+          </div>
+        </div>
+
+        <!-- Right: 3 Staggered Misi Tiles -->
+        <div class="misi-stack">
+          <div class="misi-tile tilt-card">
+            <span class="misi-num">MISI 01</span>
+            <div class="misi-content">
+              <h4>Akhlaq Sesuai Sunnah</h4>
+              <p>Mendidik para peserta didik memiliki akhlaq yang mulia sesuai dengan tuntunan Rasulullah shallallahu
+                'alaihi wa sallam.</p>
+            </div>
+          </div>
+
+          <div class="misi-tile tilt-card">
+            <span class="misi-num">MISI 02</span>
+            <div class="misi-content">
+              <h4>Manhaj Salafus Shalih</h4>
+              <p>Membimbing peserta didik agar memiliki pemahaman aqidah yang lurus berdasarkan generasi sahabat.</p>
+            </div>
+          </div>
+
+          <div class="misi-tile tilt-card">
+            <span class="misi-num">MISI 03</span>
+            <div class="misi-content">
+              <h4>Ilmu Din &amp; Keterampilan</h4>
+              <p>Membekali lulusan dengan ilmu dinul Islam serta keahlian hidup fungsional yang bermanfaat dunia
+                akhirat.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================================================
+       7. PROGRAM SECTION: LIQUID GLASS SEGMENTED SWITCHER + SHOWCASE
+       ========================================================================= -->
+  <section id="program">
+    <div class="wrap">
+      <div class="section-head scroll-blur-in">
+        <span class="chip chip-light">4 PILAR KURIKULUM</span>
+        <h2 class="section-title">Program Unggulan Terpadu</h2>
+        <p class="section-desc">
+          Pilih pilar program di bawah ini untuk melihat detail kurikulum, target capaian belajar, dan metode
+          pembimbingan kami.
+        </p>
+      </div>
+
+      <!-- Segmented Bar -->
+      <div class="program-segmented-bar">
+        <button class="seg-btn active" onclick="switchProgramTab(0)">01. Tahfizhul Qur'an</button>
+        <button class="seg-btn" onclick="switchProgramTab(1)">02. Kurikulum Nasional</button>
+        <button class="seg-btn" onclick="switchProgramTab(2)">03. Vokasi Kelistrikan</button>
+        <button class="seg-btn" onclick="switchProgramTab(3)">04. Outing &amp; Sains</button>
+      </div>
+
+      <!-- Showcase Box -->
+      <div class="program-showcase-box tilt-card">
+        <div>
+          <span class="chip chip-light" id="progPillarTag">PILAR 01 — TARGET 5 JUZ MUTQIN</span>
+          <h3 id="progTitle"
+            style="font-size: clamp(1.8rem, 3.5vw, 2.5rem); margin: 16px 0 12px; color: var(--forest-900);">
+            Tahfizhul Qur'an Bersanad Talaqqi
+          </h3>
+          <p id="progDesc" style="color: var(--text-muted); font-size: 1.05rem; line-height: 1.6;">
+            Program hafalan Al-Qur'an intensif dengan target kelulusan 5 juz mutqin. Menggunakan metode talaqqi tajwid
+            bersanad bersama asatidz hafidz, dilengkapi evaluasi harian dan ujian tasmi' resmi di hadapan orang tua.
+          </p>
+
+          <ul class="program-feature-list" id="progFeatureList">
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <polyline points="20 6 9 17 4 12" />
+              </svg>
+              <span>Bimbingan talaqqi makharijul huruf &amp; tajwid matan Jazariyah</span>
+            </li>
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <polyline points="20 6 9 17 4 12" />
+              </svg>
+              <span>Halaqah pagi rutin sebelum KBM akademik dimulai</span>
+            </li>
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <polyline points="20 6 9 17 4 12" />
+              </svg>
+              <span>Pemberian syahadah tahfizh resmi 3 &amp; 5 juz untuk bekal studi lanjut</span>
+            </li>
+          </ul>
+
+          <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+            <button class="btn btn-tactile-lime" onclick="openSpmbModal()">
+              <span>Daftar Program Ini &rarr;</span>
+            </button>
+            <a class="btn btn-liquid-glass" style="color: var(--forest-900); border-color: rgba(10,34,15,0.25);"
+              href="https://wa.me/6281311303076?text=Halo%20SMP%20Al%20Haudh%2C%20saya%20ingin%20tanya%20detail%20program%20unggulan"
+              target="_blank" rel="noopener noreferrer">
+              <span>Tanya Asatidz Pembina</span>
+            </a>
+          </div>
+        </div>
+
+        <div class="program-preview-card">
+          <span
+            style="font-size: 0.78rem; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent-lime); display: block; margin-bottom: 8px;">
+            STANDAR KEUNGGULAN
+          </span>
+          <h4 id="progCardHeader" style="font-size: 1.35rem; color: #FFFFFF; margin-bottom: 12px;">
+            Halaqah Eksklusif &amp; Terbimbing
+          </h4>
+          <p id="progCardBody"
+            style="font-size: 0.94rem; color: rgba(235, 248, 222, 0.85); line-height: 1.6; margin-bottom: 20px;">
+            Setiap halaqah dibimbing oleh ustadz yang berdedikasi tinggi dengan rasio guru-siswa yang ideal, memastikan
+            ketelitian bacaan dan kekuatan hafalan setiap murid.
+          </p>
+          <div
+            style="padding-top: 16px; border-top: 1px solid rgba(255,255,255,0.15); display: flex; justify-content: space-between; align-items: center;">
+            <span style="font-size: 0.82rem; color: var(--accent-lime); font-weight: 700;">KELAS PUTRA &amp; PUTRI
+              TERPISAH</span>
+            <span
+              style="font-size: 0.78rem; background: rgba(255,255,255,0.15); padding: 4px 10px; border-radius: var(--radius-pill);">SMP
+              AL HAUDH</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================================================
+       8. PEMBIASAAN: STACKING CARDS (SCROLL ANIMATION 4)
+       ========================================================================= -->
+  <section id="pembiasaan">
+    <div class="wrap">
+      <div class="section-head scroll-blur-in">
+        <span class="chip chip-light">PEMBIASAAN &amp; ADAB SUNNAH</span>
+        <h2 class="section-title">Karakter &amp; Amalan Yaumiyah</h2>
+        <p class="section-desc">
+          Pembiasaan harian yang menanamkan kecintaan pada ibadah, ketertiban adab penuntut ilmu, dan kemandirian nyata
+          dari pagi hingga petang.
+        </p>
+      </div>
+
+      <div class="timeline-stack">
+        <!-- Routine Card 1 -->
+        <div class="timeline-card" style="--stack-index: 0;">
+          <div class="timeline-card-header">
+            <span class="timeline-time-badge">07.15 – 08.15 WIB</span>
+            <span class="stats-pill-mini">Halaqah Ikhwan &amp; Akhwat Terpisah</span>
+          </div>
+          <h3>Halaqah Tahfizh Pagi</h3>
+          <p>Talaqqi makharijul huruf bersama asatidz hafidz dan setoran hafalan saat konsentrasi pikiran masih jernih
+            dan segar.</p>
+        </div>
+
+        <!-- Routine Card 2 -->
+        <div class="timeline-card" style="--stack-index: 1;">
+          <div class="timeline-card-header">
+            <span class="timeline-time-badge">08.15 – 08.35 WIB</span>
+            <span class="stats-pill-mini">Penanaman Rutinitas Sunnah</span>
+          </div>
+          <h3>Shalat Dhuha &amp; Dzikir Pagi</h3>
+          <p>Pembiasaan shalat sunnah dhuha berjamaah dan lantunan dzikir pagi Al-Ma'tsurat demi kelapangan hati dan
+            keberkahan ilmu.</p>
+        </div>
+
+        <!-- Routine Card 3 -->
+        <div class="timeline-card" style="--stack-index: 2;">
+          <div class="timeline-card-header">
+            <span class="timeline-time-badge">08.35 – 12.00 WIB</span>
+            <span class="stats-pill-mini">Multimedia Smart Classroom</span>
+          </div>
+          <h3>KBM Terpadu &amp; Diniyah</h3>
+          <p>Pendalaman kurikulum Kemendikbud (IPA, Matematika, Bahasa) serta materi diniyah aqidah dan fiqh ibadah di
+            ruang kelas full AC.</p>
+        </div>
+
+        <!-- Routine Card 4 -->
+        <div class="timeline-card" style="--stack-index: 3;">
+          <div class="timeline-card-header">
+            <span class="timeline-time-badge">12.00 – 13.00 WIB</span>
+            <span class="stats-pill-mini">Adab Islami &amp; Kebersamaan</span>
+          </div>
+          <h3>Shalat Zhuhur &amp; Makan Beradab</h3>
+          <p>Shalat Zhuhur berjamaah, dilanjutkan istirahat dan makan siang bersama dengan penanaman adab makan sunnah
+            Rasulullah.</p>
+        </div>
+
+        <!-- Routine Card 5 -->
+        <div class="timeline-card" style="--stack-index: 4;">
+          <div class="timeline-card-header">
+            <span class="timeline-time-badge">13.00 – 15.30 WIB</span>
+            <span class="stats-pill-mini">Kemandirian &amp; Perlindungan Doa</span>
+          </div>
+          <h3>Vokasi, Ashar &amp; Dzikir Petang</h3>
+          <p>Praktik vokasi kelistrikan mandiri, shalat Ashar berjamaah, dan dzikir petang sebelum kepulangan
+            siswa/siswi ke rumah.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================================================
+       9. FASILITAS (SOLID DRAWING 4-GRID)
+       ========================================================================= -->
+  <section id="fasilitas">
+    <div class="wrap">
+      <div class="section-head scroll-blur-in">
+        <span class="chip chip-light">SARANA PENDIDIKAN</span>
+        <h2 class="section-title">Fasilitas Nyaman &amp; Representatif</h2>
+        <p class="section-desc">
+          Sarana pembelajaran lengkap yang dirancang khusus untuk kenyamanan belajar, menghafal Al-Qur'an dan penguasaan
+          sains akademis.
+        </p>
+      </div>
+
+      <div class="fasilitas-bento">
+        <!-- Fasilitas 1 -->
+        <div class="facility-card tilt-card">
+          <div class="stats-ico" style="margin-bottom: 16px;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="3" width="18" height="18" rx="2" />
+              <path d="M3 9h18" />
+              <path d="M9 21V9" />
+            </svg>
+          </div>
+          <h3 style="font-size: 1.25rem; margin-bottom: 8px;">Gedung 5 Lantai Mandiri</h3>
+          <p style="font-size: 0.92rem; color: var(--text-muted); line-height: 1.55;">
+            Gedung permanen milik yayasan sendiri di Ciater, Serpong, tanpa sewa pihak ketiga sehingga kegiatan belajar
+            stabil dan terarah.
+          </p>
+        </div>
+
+        <!-- Fasilitas 2 -->
+        <div class="facility-card tilt-card">
+          <div class="stats-ico" style="margin-bottom: 16px;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z" />
+            </svg>
+          </div>
+          <h3 style="font-size: 1.25rem; margin-bottom: 8px;">Ruang Kelas Ber-AC</h3>
+          <p style="font-size: 0.92rem; color: var(--text-muted); line-height: 1.55;">
+            Dilengkapi pendingin ruangan optimal dan multimedia display untuk kenyamanan belajar penuh waktu (Full-Day
+            School).
+          </p>
+        </div>
+
+        <!-- Fasilitas 3 -->
+        <div class="facility-card tilt-card">
+          <div class="stats-ico" style="margin-bottom: 16px;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+              <circle cx="9" cy="7" r="4" />
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+            </svg>
+          </div>
+          <h3 style="font-size: 1.25rem; margin-bottom: 8px;">Pemisahan Ikhwan &amp; Akhwat</h3>
+          <p style="font-size: 0.92rem; color: var(--text-muted); line-height: 1.55;">
+            Pemisahan ruang kelas belajar dan aktivitas harian secara syar'i antara siswa ikhwan dan siswi akhwat demi
+            menjaga adab dan fokus.
+          </p>
+        </div>
+
+        <!-- Fasilitas 4 -->
+        <div class="facility-card tilt-card">
+          <div class="stats-ico" style="margin-bottom: 16px;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
+              <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
+            </svg>
+          </div>
+          <h3 style="font-size: 1.25rem; margin-bottom: 8px;">Perpustakaan &amp; E-Learning</h3>
+          <p style="font-size: 0.92rem; color: var(--text-muted); line-height: 1.55;">
+            Koleksi kitab rujukan sunnah, buku referensi nasional, serta portal LMS E-Learning untuk evaluasi tugas dan
+            materi digital.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================================================
+       10. GALERI (SOLID DRAWING + MASK REVEAL SCROLL 8)
+       ========================================================================= -->
+  <section id="galeri">
+    <div class="wrap">
+      <div class="section-head scroll-blur-in">
+        <span class="chip">DOKUMENTASI SEKOLAH</span>
+        <h2 class="section-title" style="color: #FFFFFF;">Galeri Fasilitas &amp; Aktivitas</h2>
+        <p class="section-desc" style="color: rgba(235, 248, 222, 0.8);">
+          Dokumentasi gedung sekolah permanen 5 lantai milik sendiri, ruang kelas ber-AC dengan multimedia smart screen,
+          serta kegiatan nyata siswa dan siswi. Klik foto untuk melihat tampilan layar penuh.
+        </p>
+      </div>
+
+      <div class="galeri-grid">
+        <div class="galeri-item mask-reveal" onclick="openCinemaGallery(0)" title="Klik untuk memperbesar">
+          <img src="foto1.jpg" alt="Gedung SMP Al Haudh Milik Sendiri">
+          <div class="galeri-overlay">
+            <span class="galeri-badge">GEDUNG MILIK SENDIRI</span>
+            <div class="galeri-caption">Gedung Permanen 5 Lantai di Ciater, Serpong</div>
+          </div>
+        </div>
+
+        <div class="galeri-item mask-reveal" onclick="openCinemaGallery(1)" title="Klik untuk memperbesar">
+          <img src="foto2.jpg" alt="Outing Class Tadabbur Alam">
+          <div class="galeri-overlay">
+            <span class="galeri-badge">OUTING CLASS</span>
+            <div class="galeri-caption">Tadabbur Alam &amp; Sains Terapan</div>
+          </div>
+        </div>
+
+        <div class="galeri-item mask-reveal" onclick="openCinemaGallery(2)" title="Klik untuk memperbesar">
+          <img src="foto3.jpg" alt="Ruang Kelas Full AC">
+          <div class="galeri-overlay">
+            <span class="galeri-badge">RUANG KELAS</span>
+            <div class="galeri-caption">Kelas Full AC &amp; Smart Screen</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================================================
+       11. LOKASI & MAPS (VERIFIED ADDRESS & INTERACTIVE ACTIONS)
+       Address: Jl. Tiga Berlian, RT.07/RW.06, Ciater, Kec. Serpong,
+                Kota Tangerang Selatan, Banten 15310
+       Coordinates: -6.3251086, 106.6965341
+       ========================================================================= -->
+  <section id="lokasi" class="bg-mesh-canvas">
+    <div class="wrap">
+      <div class="section-head scroll-blur-in">
+        <span class="chip chip-light">LOKASI &amp; KUNJUNGAN SEKOLAH</span>
+        <h2 class="section-title">Akses Lokasi &amp; Peta Sekolah</h2>
+        <p class="section-desc">
+          SMP Al Haudh berlokasi strategis di Ciater, Serpong, Tangerang Selatan. Sangat mudah dijangkau dari arah BSD
+          City, Pamulang, Ciputat, maupun akses Tol BSD–Bintaro–Jakarta.
+        </p>
+      </div>
+
+      <div class="lokasi-layout">
+        <div class="lokasi-card tilt-card">
+          <span class="lokasi-badge">ALAMAT RESMI SEKOLAH</span>
+          <div class="lokasi-address">
+            Jl. Tiga Berlian, RT.07/RW.06, Ciater, Kec. Serpong, Kota Tangerang Selatan, Banten 15310
+          </div>
+          <div class="lokasi-landmarks">
+            <strong>Patokan Akses Strategis:</strong><br>
+            Berdekatan dengan Ciater Raya, Kantor Walikota Tangsel, Jl. Bukit Indah Serua, dan kawasan mandiri BSD City
+            Serpong.
+          </div>
+          <div class="lokasi-actions">
+            <a class="btn btn-tactile-lime" href="https://maps.app.goo.gl/ZTKzRWSRymvz23ip9" target="_blank"
+              rel="noopener noreferrer">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                <circle cx="12" cy="10" r="3" />
+              </svg>
+              <span>Buka di Google Maps</span>
+            </a>
+            <a class="btn btn-tactile-wa"
+              href="https://wa.me/6281311303076?text=Assalamu%27alaikum%2C%20saya%20ingin%20jadwalkan%20kunjungan%20ke%20gedung%20SMP%20Al%20Haudh"
+              target="_blank" rel="noopener noreferrer">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor">
+                <path
+                  d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z" />
+                <path
+                  d="M11.998 2C6.477 2 2 6.484 2 12.017c0 1.99.588 3.845 1.602 5.396L2 22l4.713-1.57A9.961 9.961 0 0 0 11.998 22c5.52 0 10-4.48 10-10.002S17.518 2 11.998 2z" />
+              </svg>
+              <span>Jadwal Survey Gedung</span>
+            </a>
+          </div>
+        </div>
+
+        <div class="map-frame-box">
+          <iframe
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3965.7366965151244!2d106.6965341!3d-6.3251086!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e69e5043aa9f7d3%3A0xe7fe44a5b28dca61!2sSMP%20Al%20Haudh!5e0!3m2!1sid!2sid!4v1700000000000!5m2!1sid!2sid"
+            loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Lokasi Peta SMP Al Haudh Ciater Serpong">
+          </iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================================================
+       12. SPMB 2027/2028 (LUMINOUS LIQUID GLASS SHOWCASE)
+       ========================================================================= -->
+  <section id="spmb">
+    <div class="wrap">
+      <div class="spmb-layout">
+        <!-- Left: Glass Info Panel -->
+        <div class="spmb-info-panel">
+          <span class="chip"
+            style="background: rgba(0, 128, 105, 0.12); border-color: rgba(0, 128, 105, 0.3); color: #007A60; box-shadow: inset 0 1px 1px #fff;">
+            PROMO GELOMBANG 1 — KUOTA TERBATAS
+          </span>
+          <h2 style="color: #072210; font-size: clamp(2.2rem, 4.5vw, 3.2rem); margin: 16px 0 12px;">
+            Penerimaan Murid Baru 2027/2028
+          </h2>
+          <p style="color: #38553F; font-size: 1.05rem; line-height: 1.6;">
+            Daftarkan putra-putri Anda pada Gelombang 1 untuk mendapatkan potongan biaya masuk spesial hemat Rp
+            3.000.000. Persiapkan masa depan mereka dengan bekal aqidah shahihah dan kemandirian nyata.
+          </p>
+
+          <div class="spmb-price-card">
+            <div
+              style="font-size: 0.82rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: #007A60; margin-bottom: 6px;">
+              BIAYA MASUK GELOMBANG 1 (SEP – DES 2026)
+            </div>
+            <div class="amount">
+              Rp 12.000.000
+              <span class="cut">Rp 15.000.000</span>
+            </div>
+            <div style="font-size: 0.84rem; color: #4A6B52; margin-top: 6px;">
+              *Hemat Rp 3.000.000 khusus pelunasan pada periode Gelombang 1.
+            </div>
+          </div>
+
+          <!-- Fixed Button Grouping (Hick's Law: Primary CTA + Grouped Dual WhatsApp) -->
+          <div class="spmb-btn-group">
+            <button class="btn btn-tactile-forest" onclick="openPosterModal()"
+              style="width: 100%; justify-content: center;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                <polyline points="14 2 14 8 20 8" />
+              </svg>
+              <span>Buka Brosur Resmi SPMB</span>
+            </button>
+            <div class="spmb-wa-row">
+              <a class="btn btn-tactile-wa"
+                href="https://wa.me/6281311303076?text=Assalamu%27alaikum%2C%20saya%20ingin%20info%20SPMB%20SMP%20Al%20Haudh%20(Ikhwan)"
+                target="_blank" rel="noopener noreferrer">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor">
+                  <path
+                    d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z" />
+                  <path
+                    d="M11.998 2C6.477 2 2 6.484 2 12.017c0 1.99.588 3.845 1.602 5.396L2 22l4.713-1.57A9.961 9.961 0 0 0 11.998 22c5.52 0 10-4.48 10-10.002S17.518 2 11.998 2z" />
+                </svg>
+                <span>WhatsApp Ikhwan</span>
+              </a>
+              <a class="btn btn-tactile-wa"
+                href="https://wa.me/6285693772996?text=Assalamu%27alaikum%2C%20saya%20ingin%20info%20SPMB%20SMP%20Al%20Haudh%20(Akhwat)"
+                target="_blank" rel="noopener noreferrer">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor">
+                  <path
+                    d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z" />
+                  <path
+                    d="M11.998 2C6.477 2 2 6.484 2 12.017c0 1.99.588 3.845 1.602 5.396L2 22l4.713-1.57A9.961 9.961 0 0 0 11.998 22c5.52 0 10-4.48 10-10.002S17.518 2 11.998 2z" />
+                </svg>
+                <span>WhatsApp Akhwat</span>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: Official Poster Card with 3D Tilt -->
+        <div class="spmb-poster-box tilt-card" onclick="openPosterModal()" title="Klik untuk memperbesar brosur SPMB">
+          <img src="spmb-poster.jpg" alt="Brosur Resmi SPMB SMP Al Haudh">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================================================
+       13. FAQ SECTION: LIQUID GLASS ACCORDION
+       ========================================================================= -->
+  <section id="faq">
+    <div class="wrap">
+      <div class="section-head scroll-blur-in">
+        <span class="chip chip-light">TANYA JAWAB</span>
+        <h2 class="section-title">Pertanyaan Sering Diajukan</h2>
+        <p class="section-desc">
+          Jawaban transparan seputar sistem pembelajaran, pemisahan ikhwan/akhwat, tahfizh, dan pendaftaran di SMP Al
+          Haudh.
+        </p>
+      </div>
+
+      <div class="faq-list">
+        <!-- FAQ 1 -->
+        <div class="faq-card" onclick="toggleFaq(this)">
+          <div class="faq-question">
+            <h4>Bagaimana sistem pemisahan antara siswa ikhwan dan siswi akhwat?</h4>
+            <div class="faq-toggle-ico">+</div>
+          </div>
+          <div class="faq-answer">
+            Siswa ikhwan dan siswi akhwat belajar di ruang kelas yang sepenuhnya terpisah dengan koridor dan fasilitas
+            yang diatur secara syar'i. Hal ini bertujuan menjaga adab pergaulan islami serta memastikan konsentrasi
+            belajar tetap optimal tanpa distraksi.
+          </div>
+        </div>
+
+        <!-- FAQ 2 -->
+        <div class="faq-card" onclick="toggleFaq(this)">
+          <div class="faq-question">
+            <h4>Apakah SMP Al Haudh berstatus sekolah berasrama atau full-day?</h4>
+            <div class="faq-toggle-ico">+</div>
+          </div>
+          <div class="faq-answer">
+            SMP Al Haudh menyelenggarakan pendidikan sistem Full-Day School dari hari Senin hingga Jum'at, dimulai pukul
+            07.15 sampai 15.30 WIB. Siswa dan siswi dapat pulang ke rumah berkumpul bersama keluarga setiap hari.
+          </div>
+        </div>
+
+        <!-- FAQ 3 -->
+        <div class="faq-card" onclick="toggleFaq(this)">
+          <div class="faq-question">
+            <h4>Bagaimana target tahfizh Al-Qur'an dan metode pembimbingannya?</h4>
+            <div class="faq-toggle-ico">+</div>
+          </div>
+          <div class="faq-answer">
+            Target kelulusan adalah 5 juz mutqin bersanad. Pembelajaran dilakukan setiap pagi melalui metode talaqqi
+            tajwid bersanad Jazariyah dalam halaqah kecil yang intensif bersama asatidz hafidz.
+          </div>
+        </div>
+
+        <!-- FAQ 4 -->
+        <div class="faq-card" onclick="toggleFaq(this)">
+          <div class="faq-question">
+            <h4>Apa saja syarat dan keuntungan mendaftar pada Gelombang 1?</h4>
+            <div class="faq-toggle-ico">+</div>
+          </div>
+          <div class="faq-answer">
+            Pendaftaran Gelombang 1 dibuka September hingga Desember 2026 dengan keuntungan potongan biaya masuk spesial
+            hemat Rp 3.000.000 (menjadi Rp 12.000.000 dari normal Rp 15.000.000) serta prioritas pemilihan ukuran
+            seragam dan perlengkapan sekolah.
+          </div>
+        </div>
+
+        <!-- FAQ 5 -->
+        <div class="faq-card" onclick="toggleFaq(this)">
+          <div class="faq-question">
+            <h4>Apakah ijazah SMP Al Haudh sah untuk mendaftar ke SMA/SMK Negeri?</h4>
+            <div class="faq-toggle-ico">+</div>
+          </div>
+          <div class="faq-answer">
+            Ya, sangat sah. SMP Al Haudh resmi terdaftar di Kemendikbudristek dengan NPSN 69952451 dan Terakreditasi
+            Peringkat A (Unggul). Seluruh lulusan berhak atas ijazah resmi negara dan dapat melanjutkan ke sekolah
+            negeri maupun swasta unggulan.
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================================================
+       14. FOOTER & FLOATING WHATSAPP PILL
+       ========================================================================= -->
+  <footer>
+    <div class="wrap">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <div class="nav-logo" style="width: 36px; height: 36px;">
+              <img src="logo.png" alt="Logo SMP Al Haudh">
+            </div>
+            <b style="margin: 0; font-size: 1.25rem;">SMP Al Haudh</b>
+          </div>
+          <p style="margin-top: 14px;">
+            Sekolah Menengah Pertama Islam Terpadu &amp; Life Skills di Ciater, Serpong. Memadukan tahfizh Al-Qur'an
+            bersanad, kurikulum nasional Kemendikbud, dan manhaj Salafus Shalih.
+          </p>
+        </div>
+
+        <div class="footer-col">
+          <h5>Navigasi</h5>
+          <ul>
+            <li><a href="#profil">Profil &amp; Visi</a></li>
+            <li><a href="#program">Program Unggulan</a></li>
+            <li><a href="#pembiasaan">Pembiasaan Harian</a></li>
+            <li><a href="#fasilitas">Sarana &amp; Fasilitas</a></li>
+            <li><a href="#galeri">Dokumentasi Sekolah</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h5>Pendaftaran</h5>
+          <ul>
+            <li><a href="#spmb">SPMB 2027/2028</a></li>
+            <li><a href="javascript:void(0)" onclick="openPosterModal()">Brosur Resmi PDF</a></li>
+            <li><a href="https://wa.me/6281311303076" target="_blank" rel="noopener noreferrer">WhatsApp Ikhwan</a></li>
+            <li><a href="https://wa.me/6285693772996" target="_blank" rel="noopener noreferrer">WhatsApp Akhwat</a></li>
+            <li><a href="https://e-learning.smpalhaudh.sch.id/" target="_blank" rel="noopener noreferrer">Portal
+                E-Learning</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h5>Kontak &amp; Alamat</h5>
+          <ul>
+            <li style="color: rgba(235, 248, 222, 0.85); font-size: 0.88rem; line-height: 1.5;">
+              Jl. Tiga Berlian, RT.07/RW.06, Ciater, Kec. Serpong, Kota Tangerang Selatan, Banten 15310
+            </li>
+            <li style="margin-top: 8px;">
+              <a href="https://maps.app.goo.gl/ZTKzRWSRymvz23ip9" target="_blank" rel="noopener noreferrer"
+                style="color: var(--accent-lime); font-weight: 700;">
+                Lihat di Google Maps &rarr;
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <div>&copy; 2026–2028 SMP Al Haudh Islamic School. Hak cipta dilindungi undang-undang.</div>
+        <div style="display: flex; gap: 16px;">
+          <span>NPSN: 69952451</span>
+          <span>Akreditasi BAN-S/M: A</span>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Glass Bottom Nav (dibangun oleh script.js) -->
+  <div class="gnav" id="gnav" role="navigation" aria-label="Navigasi cepat"></div>
+
+  <!-- Floating WhatsApp Action -->
+  <a class="wa-float-btn" id="tanyaSpmb"
+    href="https://wa.me/6281311303076?text=Assalamu%27alaikum%2C%20saya%20ingin%20tanya%20info%20pendaftaran%20SMP%20Al%20Haudh"
+    target="_blank" rel="noopener noreferrer">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+      <path
+        d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z" />
+      <path
+        d="M11.998 2C6.477 2 2 6.484 2 12.017c0 1.99.588 3.845 1.602 5.396L2 22l4.713-1.57A9.961 9.961 0 0 0 11.998 22c5.52 0 10-4.48 10-10.002S17.518 2 11.998 2z" />
+    </svg>
+    <span>Tanya SPMB</span>
+  </a>
+
+  <!-- =========================================================================
+       MODALS: SPMB REGISTRATION, POSTER LIGHTBOX & CINEMA GALLERY
+       ========================================================================= -->
+
+  <!-- Modal 1: SPMB Direct Register -->
+  <div id="spmbDirectModal" class="cinema-modal" onclick="closeSpmbOnClickOutside(event)">
+    <div class="cinema-modal-box" style="max-width: 620px; padding: 36px 32px;">
+      <button class="cinema-close-btn" onclick="closeSpmbModal()">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <line x1="18" y1="6" x2="6" y2="18" />
+          <line x1="6" y1="6" x2="18" y2="18" />
+        </svg>
+      </button>
+
+      <span class="chip"
+        style="background: rgba(226, 241, 158, 0.2); color: var(--accent-lime); border-color: rgba(226, 241, 158, 0.4); margin-bottom: 12px;">
+        PENDAFTARAN SPMB 2027/2028
+      </span>
+      <h3 style="color: #FFFFFF; font-size: 1.85rem; margin-bottom: 10px;">
+        Pilih Jalur Pendaftaran
+      </h3>
+      <p style="color: rgba(235, 248, 222, 0.85); font-size: 0.98rem; line-height: 1.6; margin-bottom: 24px;">
+        Silakan hubungi narahubung resmi panitia pendaftaran murid baru SMP Al Haudh sesuai peminatan kelas putra
+        (ikhwan) atau putri (akhwat):
+      </p>
+
+      <div style="display: flex; flex-direction: column; gap: 12px;">
+        <a class="btn btn-tactile-wa"
+          href="https://wa.me/6281311303076?text=Assalamu%27alaikum%20Panitia%20SPMB%2C%20saya%20ingin%20mendaftarkan%20calon%20siswa%20(Ikhwan)"
+          target="_blank" rel="noopener noreferrer" style="justify-content: flex-start; padding: 14px 20px;">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+            <path
+              d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z" />
+            <path
+              d="M11.998 2C6.477 2 2 6.484 2 12.017c0 1.99.588 3.845 1.602 5.396L2 22l4.713-1.57A9.961 9.961 0 0 0 11.998 22c5.52 0 10-4.48 10-10.002S17.518 2 11.998 2z" />
+          </svg>
+          <div>
+            <div style="font-weight: 800;">Daftar Kelas Ikhwan (Putra)</div>
+            <div style="font-size: 0.8rem; opacity: 0.9;">WhatsApp Panitia: 0813-1130-3076</div>
+          </div>
+        </a>
+
+        <a class="btn btn-tactile-wa"
+          href="https://wa.me/6285693772996?text=Assalamu%27alaikum%20Panitia%20SPMB%2C%20saya%20ingin%20mendaftarkan%20calon%20siswi%20(Akhwat)"
+          target="_blank" rel="noopener noreferrer" style="justify-content: flex-start; padding: 14px 20px;">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+            <path
+              d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z" />
+            <path
+              d="M11.998 2C6.477 2 2 6.484 2 12.017c0 1.99.588 3.845 1.602 5.396L2 22l4.713-1.57A9.961 9.961 0 0 0 11.998 22c5.52 0 10-4.48 10-10.002S17.518 2 11.998 2z" />
+          </svg>
+          <div>
+            <div style="font-weight: 800;">Daftar Kelas Akhwat (Putri)</div>
+            <div style="font-size: 0.8rem; opacity: 0.9;">WhatsApp Panitia: 0856-9377-2996</div>
+          </div>
+        </a>
+
+        <button class="btn btn-liquid-glass" onclick="closeSpmbModal(); openPosterModal();"
+          style="width: 100%; margin-top: 8px;">
+          <span>Lihat Brosur Resmi Lengkap &rarr;</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal 2: Poster Lightbox -->
+  <div id="spmbPosterModal" class="cinema-modal" onclick="closePosterOnClickOutside(event)">
+    <div class="cinema-modal-box" style="max-width: 680px; max-height: 90vh; overflow-y: auto;">
+      <button class="cinema-close-btn" onclick="closePosterModal()">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <line x1="18" y1="6" x2="6" y2="18" />
+          <line x1="6" y1="6" x2="18" y2="18" />
+        </svg>
+      </button>
+      <img src="spmb-poster.jpg" alt="Brosur Lengkap SPMB SMP Al Haudh" style="width: 100%; height: auto;">
+      <div
+        style="padding: 20px 24px; background: rgba(10,34,16,0.95); display: flex; gap: 12px; justify-content: flex-end; flex-wrap: wrap;">
+        <a class="btn btn-tactile-lime" href="./brosur.pdf" target="_blank" rel="noopener noreferrer">
+          <span>Unduh Brosur PDF</span>
+        </a>
+        <button class="btn btn-liquid-glass" onclick="closePosterModal(); openSpmbModal();">
+          <span>Hubungi Panitia SPMB</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal 3: Cinema Gallery Lightbox -->
+  <div id="cinemaGalleryModal" class="cinema-modal" onclick="closeCinemaOnClickOutside(event)">
+    <div class="cinema-modal-box" style="max-width: 960px;">
+      <button class="cinema-close-btn" onclick="closeCinemaGallery()">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <line x1="18" y1="6" x2="6" y2="18" />
+          <line x1="6" y1="6" x2="18" y2="18" />
+        </svg>
+      </button>
+      <div
+        style="position: relative; max-height: 70vh; overflow: hidden; background: #000; display: flex; align-items: center; justify-content: center;">
+        <img id="cinemaImg" src="foto1.jpg" alt="Foto Galeri"
+          style="max-height: 70vh; width: auto; object-fit: contain;">
+      </div>
+      <div
+        style="padding: 20px 28px; background: rgba(7, 24, 10, 0.96); display: flex; align-items: center; justify-content: space-between;">
+        <div>
+          <span id="cinemaCategory"
+            style="font-size: 0.74rem; font-weight: 800; letter-spacing: 0.08em; color: var(--accent-lime); text-transform: uppercase;">
+            DOKUMENTASI SEKOLAH
+          </span>
+          <h4 id="cinemaTitle" style="color: #FFFFFF; font-size: 1.15rem; margin-top: 4px;">
+            Gedung Permanen 5 Lantai
+          </h4>
+        </div>
+        <div style="display: flex; gap: 8px;">
+          <button class="nav-hamburger" onclick="prevCinemaPhoto()" aria-label="Foto Sebelumnya"
+            style="display: inline-flex;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <polyline points="15 18 9 12 15 6" />
+            </svg>
+          </button>
+          <button class="nav-hamburger" onclick="nextCinemaPhoto()" aria-label="Foto Selanjutnya"
+            style="display: inline-flex;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <polyline points="9 18 15 12 9 6" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       15. JAVASCRIPT: 19 ANIMATION PRINCIPLES & SCROLL INTERACTIONS
+       ========================================================================= -->
+  <script src="script.js?v=6"></script>
+</body>
+
+</html>
