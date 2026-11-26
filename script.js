@@ -19,7 +19,11 @@
   let curtainShown = false, curtainLifted = false, onCurtainLift = null;
 
   /* ------------------------------------------------------------------
-     0. Curtain preloader
+     0. Welcoming animation (preloader)
+        Urutan: ornamen bintang segi-8 tergambar + cincin progres → logo muncul →
+        "Ahlan wa Sahlan" → "SMP Al Haudh" naik per kata → tagline →
+        konten memudar → panel gelap & lime naik bergelombang dari tengah → hero.
+        Bisa dilewati: klik, tombol keyboard, scroll, atau sentuh-geser.
      ------------------------------------------------------------------ */
   (function preloader() {
     const curtain = $('#app-preloader');
@@ -31,23 +35,80 @@
     }
     try { sessionStorage.setItem('ah-seen', '1'); } catch (e) { }
     curtainShown = true;
+    // JavaScript berjalan → pengaman CSS (auto-hilang 6 dtk) tidak diperlukan
+    curtain.style.animation = 'none';
+    body.style.animation = 'none';
 
-    const MIN_MS = 750;   // cukup untuk animasi logo masuk
-    const MAX_MS = 1500;  // batas atas, apa pun yang terjadi
-    let lifted = false;
-    function lift() {
+    let lifted = false, finished = false;
+    function lift() {            // tirai mulai terbuka: lepas kunci scroll & mainkan intro hero
       if (lifted) return;
       lifted = true;
       curtainLifted = true;
-      curtain.classList.add('lift-up');
       release();
       if (onCurtainLift) onCurtainLift();
-      setTimeout(() => curtain.remove(), 1100);
     }
-    const wait = ms => new Promise(r => setTimeout(r, Math.max(0, ms)));
-    const fontsReady = document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve();
-    Promise.all([Promise.race([fontsReady, wait(500)]), wait(MIN_MS - performance.now())]).then(lift);
-    setTimeout(lift, Math.max(0, MAX_MS - performance.now()));
+    function finish() {
+      if (finished) return;
+      finished = true;
+      lift();
+      curtain.remove();
+      ['keydown', 'wheel', 'touchmove'].forEach(t => removeEventListener(t, skip));
+    }
+    setTimeout(finish, 6000); // batas atas, apa pun yang terjadi
+
+    let skip = () => { };
+    if (hasGSAP) {
+      const gsap = window.gsap;
+      const q = s => curtain.querySelectorAll(s);
+      const wave = { each: 0.07, from: 'center' };
+      const tl = gsap.timeline({ defaults: { ease: 'power3.out' }, onComplete: finish });
+
+      tl
+        // 1) ornamen & cahaya
+        .to(q('.pl-glow'), { opacity: 1, duration: 1.4, ease: 'sine.out' }, 0)
+        .fromTo(q('.pl-star'), { rotation: -60, scale: 0.8 }, { rotation: 0, scale: 1, duration: 2, ease: 'expo.out' }, 0)
+        .to(q('.pl-draw'), { strokeDashoffset: 0, duration: 1.5, stagger: 0.15, ease: 'power2.inOut' }, 0)
+        .to(q('.pl-orbit'), { opacity: 1, duration: 1 }, 0.3)
+        .to(q('.pl-ring-arc'), { strokeDashoffset: 0, duration: 1.4, ease: 'power1.inOut' }, 0.1)
+        // 2) logo
+        .to(q('.pl-logo'), { opacity: 1, scale: 1, duration: 1.1, ease: 'back.out(1.7)' }, 0.15)
+        // 3) teks sambutan
+        .to(q('.pl-kicker'), { opacity: 1, letterSpacing: '0.32em', duration: 1.1 }, 0.45)
+        .to(q('.pl-word'), { y: 0, duration: 0.9, stagger: 0.09, ease: 'power4.out' }, 0.55)
+        .to(q('.pl-tag'), { opacity: 1, y: 0, duration: 0.8 }, 0.95)
+        .to(q('.pl-skip'), { opacity: 1, duration: 0.4 }, 0.9)
+        // 4) keluar
+        .addLabel('exit', 1.85)
+        .to(q('.pl-center'), { y: -36, opacity: 0, scale: 0.96, duration: 0.55, ease: 'power2.in' }, 'exit')
+        .to(q('.pl-star'), { rotation: 40, scale: 1.3, opacity: 0, duration: 0.8, ease: 'power2.in' }, 'exit')
+        .to(q('.pl-glow, .pl-skip'), { opacity: 0, duration: 0.4 }, 'exit')
+        .to(q('.pl-panels--front span'), { yPercent: -100, duration: 1, ease: 'power4.inOut', stagger: wave }, 'exit+=0.3')
+        .to(q('.pl-panels--back span'), { yPercent: -100, duration: 1, ease: 'power4.inOut', stagger: wave }, 'exit+=0.38')
+        .call(lift, null, 'exit+=0.45');
+
+      // Lewati: langsung lompat ke bagian keluar
+      skip = () => {
+        if (finished || tl.time() >= tl.labels.exit) return;
+        tl.seek('exit').timeScale(1.6); // keluar lebih cepat saat dilewati
+      };
+    } else {
+      // Tanpa GSAP: tampil statis, lalu keluar dengan transisi CSS
+      curtain.classList.add('pl-static');
+      let started = false;
+      const out = () => {
+        if (started) return;
+        started = true;
+        curtain.classList.add('lift-up');
+        setTimeout(lift, 300);
+        setTimeout(finish, 1500);
+      };
+      setTimeout(out, 1400);
+      skip = out;
+    }
+    curtain.addEventListener('click', () => skip());
+    addEventListener('keydown', skip);
+    addEventListener('wheel', skip, { passive: true });
+    addEventListener('touchmove', skip, { passive: true });
   })();
 
   /* ------------------------------------------------------------------

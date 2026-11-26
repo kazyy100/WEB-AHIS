@@ -99,65 +99,240 @@ body.preloader-active {
 }
 
 /* =========================================================================
-   0. KOROWA-STYLE CURTAIN PRELOADER (SMP AL HAUDH)
+   0. WELCOMING ANIMATION (digerakkan GSAP di script.js)
+   - State awal di bawah ini = "belum muncul"; GSAP menganimasikan ke state akhir.
+   - .pl-static  = versi tanpa GSAP (semua langsung tampil).
+   - .lift-up    = keluar via transisi CSS (fallback tanpa GSAP).
    ========================================================================= */
 #app-preloader {
   position: fixed;
   inset: 0;
   z-index: 999999;
-  background: radial-gradient(circle at 50% 50%, #0F3519 0%, #0A220F 65%, #06160A 100%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transform: translateY(0);
-  will-change: transform;
-  /* Korowa luxury curtain lift: smooth easeInOutExpo */
-  transition: transform 1.05s cubic-bezier(0.77, 0, 0.175, 1), visibility 1.05s;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  color: #EBF8DE;
+  cursor: pointer;
+  /* pengaman: bila JavaScript gagal total, tirai tetap hilang setelah 6 detik */
+  animation: plFailsafe 0s 6s forwards;
 }
 
 .no-preloader #app-preloader {
   display: none;
 }
 
-#app-preloader.lift-up {
-  transform: translateY(-100%);
-  visibility: hidden;
-  pointer-events: none;
+body.preloader-active {
+  animation: plUnlock 0s 6s forwards;
 }
 
-.curtain-content {
+@keyframes plFailsafe {
+  to { visibility: hidden; opacity: 0; pointer-events: none; }
+}
+
+@keyframes plUnlock {
+  to { overflow: auto; }
+}
+
+/* --- Panel latar (5 kolom) — depan gelap, belakang lime --- */
+.pl-panels {
+  position: absolute;
+  inset: 0;
+  display: flex;
+}
+
+.pl-panels span {
+  flex: 1;
+  height: 100%;
+  margin-right: -1px; /* hindari garis rambut di antara panel */
+  will-change: transform;
+}
+
+.pl-panels--back span {
+  /* lapisan kedua: hijau sedang + garis lime tipis di tepi bawah → satu sapuan lime saat tirai naik */
+  background: linear-gradient(180deg, #1E5530 0%, #2C6B3E 100%);
+  box-shadow: inset 0 -3px 0 #E2F19E, 0 0 18px rgba(226, 241, 158, 0.35);
+}
+
+.pl-panels--front span {
+  /* satu gradien radial yang "dipotong" ke 5 panel agar tampak menyatu */
+  background: radial-gradient(ellipse 70% 60% at 50% 42%, #164A24 0%, #0B2812 52%, #05160A 100%);
+  background-size: 500% 100%;
+}
+
+.pl-panels--front span:nth-child(1) { background-position: 0% 0; }
+.pl-panels--front span:nth-child(2) { background-position: 25% 0; }
+.pl-panels--front span:nth-child(3) { background-position: 50% 0; }
+.pl-panels--front span:nth-child(4) { background-position: 75% 0; }
+.pl-panels--front span:nth-child(5) { background-position: 100% 0; }
+
+/* --- Konten tengah --- */
+.pl-center {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 24px;
+  pointer-events: none;
+  user-select: none;
+}
+
+.pl-emblem {
+  --E: clamp(116px, 26vmin, 170px); /* ukuran logo; ornamen & jarak mengikuti */
+  position: relative;
+  width: var(--E);
+  aspect-ratio: 1;
+  /* ornamen bintang menjulur ±0,9E dari pusat → beri ruang agar tidak menabrak teks */
+  margin-top: calc(var(--E) * 0.36);
+  margin-bottom: calc(var(--E) * 0.5);
+}
+
+.pl-glow {
+  position: absolute;
+  inset: -80%;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(226, 241, 158, 0.22) 0%, rgba(226, 241, 158, 0.06) 38%, transparent 66%);
+  opacity: 0;
+}
+
+.pl-star {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 200%;
+  height: 200%;
+  translate: -50% -50%;
+  overflow: visible;
+  fill: none;
+}
+
+.pl-orbit {
+  stroke: rgba(226, 241, 158, 0.22);
+  stroke-width: 0.5;
+  stroke-dasharray: 1.5 3.5;
+  opacity: 0;
+}
+
+.pl-draw {
+  stroke: rgba(226, 241, 158, 0.55);
+  stroke-width: 0.7;
+  stroke-linejoin: round;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+}
+
+.pl-ring-track {
+  stroke: rgba(255, 255, 255, 0.1);
+  stroke-width: 1;
+}
+
+.pl-ring-arc {
+  stroke: #E2F19E;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  filter: drop-shadow(0 0 2px rgba(226, 241, 158, 0.8));
+}
+
+.pl-logo {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 10px 26px rgba(0, 0, 0, 0.45));
+  opacity: 0;
+  transform: scale(0.7);
+}
+
+.pl-kicker {
+  font: 700 clamp(0.72rem, 2.4vw, 0.85rem) var(--font-body);
+  letter-spacing: 0.7em;
+  text-transform: uppercase;
+  color: var(--accent-lime);
+  margin-bottom: 10px;
+  padding-left: 0.32em; /* imbangi letter-spacing agar tetap di tengah */
+  opacity: 0;
+}
+
+.pl-title {
+  font: 800 clamp(2.3rem, 9vw, 4rem) / 1 var(--font-display);
+  letter-spacing: -0.035em;
+  color: #FFFFFF;
+  display: flex;
+  gap: 0.24em;
+}
+
+.pl-mask {
+  display: inline-block;
+  overflow: hidden;
+  padding: 0.06em 0.02em 0.1em;
+}
+
+.pl-word {
+  display: inline-block;
+  transform: translateY(115%);
+}
+
+.pl-tag {
+  margin-top: clamp(14px, 2.6vmin, 20px);
   display: flex;
   align-items: center;
-  justify-content: center;
-  animation: curtainLogoEntrance 0.85s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-  transition: transform 0.65s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.55s ease;
+  gap: 12px;
+  font: 600 clamp(0.78rem, 2.6vw, 0.95rem) var(--font-body);
+  letter-spacing: 0.06em;
+  color: rgba(235, 248, 222, 0.78);
+  opacity: 0;
+  transform: translateY(10px);
 }
 
-#app-preloader.lift-up .curtain-content {
-  transform: translateY(-40px);
-  opacity: 0.15;
+.pl-tag i {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--accent-lime);
+  box-shadow: 0 0 8px rgba(226, 241, 158, 0.8);
 }
 
-.curtain-logo {
-  width: clamp(120px, 16vw, 175px);
-  height: auto;
-  object-fit: contain;
-  filter: drop-shadow(0 12px 28px rgba(0, 0, 0, 0.45));
-  user-select: none;
-  pointer-events: none;
+.pl-skip {
+  position: absolute;
+  z-index: 3;
+  right: max(18px, env(safe-area-inset-right));
+  bottom: max(18px, env(safe-area-inset-bottom));
+  padding: 8px 16px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  background: rgba(255, 255, 255, 0.06);
+  color: rgba(235, 248, 222, 0.8);
+  font: 600 0.78rem var(--font-body);
+  letter-spacing: 0.06em;
+  opacity: 0;
 }
 
-@keyframes curtainLogoEntrance {
-  0% {
-    opacity: 0;
-    transform: scale(0.92) translateY(12px);
-  }
-
-  100% {
-    opacity: 1;
-    transform: scale(1) translateY(0);
-  }
+.pl-skip:hover {
+  background: rgba(255, 255, 255, 0.14);
+  color: #FFFFFF;
 }
+
+/* --- Versi tanpa GSAP: tampil langsung, keluar dengan transisi CSS --- */
+#app-preloader.pl-static .pl-logo,
+#app-preloader.pl-static .pl-kicker,
+#app-preloader.pl-static .pl-tag,
+#app-preloader.pl-static .pl-glow,
+#app-preloader.pl-static .pl-orbit { opacity: 1; transform: none; }
+#app-preloader.pl-static .pl-word { transform: none; }
+#app-preloader.pl-static .pl-kicker { letter-spacing: 0.32em; }
+#app-preloader.pl-static .pl-draw,
+#app-preloader.pl-static .pl-ring-arc { stroke-dashoffset: 0; }
+
+#app-preloader.lift-up { pointer-events: none; }
+#app-preloader.lift-up .pl-center { opacity: 0; transform: translateY(-30px); transition: opacity 0.4s ease, transform 0.5s ease; }
+#app-preloader.lift-up .pl-panels span {
+  transform: translateY(-100%);
+  transition: transform 0.9s cubic-bezier(0.77, 0, 0.175, 1) calc(var(--i) * 70ms + 0.2s);
+}
+#app-preloader.lift-up .pl-panels--back span { transition-delay: calc(var(--i) * 70ms + 0.32s); }
 
 /* Ambient atmospheric background textures for glassmorphism refraction */
 .bg-mesh-canvas {
