@@ -16,17 +16,18 @@
   const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const finePointer = matchMedia('(hover: hover) and (pointer: fine)').matches;
   const hasGSAP = !!(window.gsap && window.ScrollTrigger);
-  let curtainShown = false, curtainLifted = false, onCurtainLift = null;
+  let curtainShown = false, curtainLifted = false, onCurtainLift = null, onCurtainDone = null;
+  const HERO_CIRCLE_OPACITY = 0.14; // sama dengan opacity .hero-circle di CSS
 
   /* ------------------------------------------------------------------
-     0. Welcoming animation (preloader)
-        Urutan: logo muncul di layar terang → bulatan logo membesar memenuhi layar →
-        logo mengecil & tulisan "AL HAUDH" keluar dari balik bulatan →
-        panel hijau turun dengan tepi melengkung (pita hijau muda menyusul) → hero.
-        Bisa dilewati: klik, tombol keyboard, scroll, atau sentuh-geser.
+     0. Welcoming animation (preloader) — sederhana & linear
+        Bulatan muncul → bergeser lurus ke samping sambil "AL HAUDH" terbuka →
+        tulisan & latar memudar, bulatan terbang ke posisinya di hero (.hero-circle)
+        lalu terus melayang di sana. Bisa dilewati: klik, tombol keyboard, scroll, geser.
      ------------------------------------------------------------------ */
   (function preloader() {
     const curtain = $('#app-preloader');
+    const heroCircle = $('.hero-circle');
     const release = () => body.classList.remove('preloader-active');
     if (!curtain || root.classList.contains('no-preloader')) {
       if (curtain) curtain.remove();
@@ -39,19 +40,21 @@
     curtain.style.animation = 'none';
     body.style.animation = 'none';
 
-    let lifted = false, finished = false;
-    function lift() {            // tirai mulai terbuka: lepas kunci scroll & mainkan intro hero
-      if (lifted) return;
-      lifted = true;
+    let heroStarted = false, finished = false;
+    function startHero() {        // mainkan intro konten hero
+      if (heroStarted) return;
+      heroStarted = true;
       curtainLifted = true;
-      release();
       if (onCurtainLift) onCurtainLift();
     }
     function finish() {
       if (finished) return;
       finished = true;
-      lift();
+      startHero();
+      release();
+      if (heroCircle) heroCircle.style.opacity = ''; // bulatan hero mengambil alih
       curtain.remove();
+      if (onCurtainDone) onCurtainDone();
       ['keydown', 'wheel', 'touchmove'].forEach(t => removeEventListener(t, skip));
     }
     setTimeout(finish, 6000); // batas atas, apa pun yang terjadi
@@ -59,68 +62,80 @@
     let skip = () => { };
     if (hasGSAP) {
       const gsap = window.gsap;
-      const q = s => curtain.querySelector(s);
-      const brand = q('.pl-brand'), mark = q('.pl-mark'), wrap = q('.pl-wrap'), word = q('.pl-wordmark');
-      const waveEl = q('.pl-wave'), disc = q('.pl-disc');
-      const E = mark.offsetWidth;
-      // bulatan mulai tepat seukuran logo, lalu membesar menutup seluruh layar
-      gsap.set([waveEl, disc], { scale: E / disc.offsetWidth });
+      const dot = curtain.querySelector('.pl-dot');
+      const text = curtain.querySelector('.pl-text');
+      const bg = curtain.querySelector('.pl-bg');
 
-      // Jejak tulisan saat turun (seperti efek di video referensi)
-      function trail() {
-        const ghosts = [0.34, 0.16].map(op => {
-          const g = brand.cloneNode(true);
-          g.style.opacity = op;
-          curtain.insertBefore(g, brand);
-          return g;
-        });
-        gsap.to(ghosts, { y: innerHeight * 1.25, opacity: 0, duration: 0.95, ease: 'power3.inOut', stagger: 0.07, delay: 0.06 });
+      // Bulatan intro dibuat seukuran bulatan hero, lalu diperkecil → tetap tajam saat membesar
+      if (heroCircle) {
+        heroCircle.style.animation = 'none';
+        heroCircle.style.opacity = '0';
       }
+      const S = heroCircle ? heroCircle.offsetWidth : 300;
+      gsap.set(dot, { width: S, height: S, marginLeft: -S / 2, marginTop: -S / 2 });
+      gsap.set(text, { xPercent: -50, yPercent: -50, x: 0, y: 0 }); // pusatkan lewat GSAP (lihat catatan di CSS)
 
-      const tl = gsap.timeline({ defaults: { ease: 'power3.out' }, onComplete: finish });
+      let d = 0, gap = 0, W = 0, target = { x: 0, y: 0 };
+      const measure = () => {
+        const fs = parseFloat(getComputedStyle(text).fontSize);
+        d = fs * 0.72;      // diameter bulatan ≈ tinggi huruf kapital
+        gap = fs * 0.34;
+        W = text.offsetWidth;
+      };
+      const measureTarget = () => {
+        if (!heroCircle) { target = { x: 0, y: 0 }; return; }
+        const r = heroCircle.getBoundingClientRect();
+        target = { x: r.left + r.width / 2 - innerWidth / 2, y: r.top + r.height / 2 - innerHeight / 2 };
+      };
+
+      const ease = 'power3.inOut';
+      const tl = gsap.timeline({ paused: true, onComplete: finish });
       tl
-        // 1) logo muncul di layar terang
-        .to(mark, { opacity: 1, scale: 1, duration: 0.7, ease: 'back.out(1.7)' }, 0.1)
-        .to(q('.pl-skip'), { opacity: 1, duration: 0.4 }, 0.6)
-        // antisipasi: logo sedikit mengempis sebelum bulatannya membesar
-        .to(mark, { scale: 0.9, duration: 0.18, ease: 'power2.in' }, 0.8)
-        .to(mark, { scale: 1, duration: 0.6, ease: 'elastic.out(1, 0.55)' }, 0.98)
-        // 2) bulatan logo membesar memenuhi layar (hijau terang memimpin, hijau tua menyusul)
-        .to(waveEl, { scale: 1, duration: 0.8, ease: 'power3.in' }, 0.95)
-        .to(disc, { scale: 1, duration: 0.8, ease: 'power3.in' }, 1.05)
-        .to(q('.pl-logo-color'), { opacity: 0, duration: 0.3 }, 1.25)
-        .to(q('.pl-logo-white'), { opacity: 1, duration: 0.3 }, 1.25)
-        // 3) logo mengecil, lalu tulisan AL HAUDH keluar dari balik bulatan
-        .to(mark, { width: () => E * 0.46, height: () => E * 0.46, duration: 0.55, ease: 'power3.inOut' }, 1.95)
-        .to(wrap, { width: () => word.offsetWidth, duration: 0.75, ease: 'power3.inOut' }, 2.25)
-        .fromTo(word, { xPercent: -100 }, { xPercent: 0, duration: 0.75, ease: 'power3.inOut' }, 2.25)
-        // 4) keluar: panel hijau (tepi melengkung) turun membawa tulisan, pita hijau muda menyusul
-        .addLabel('exit', 3.35)
-        .set([q('.pl-band'), q('.pl-exit')], { opacity: 1 }, 'exit')
-        .set([waveEl, disc, q('.pl-bg')], { autoAlpha: 0 }, 'exit')
-        .to(q('.pl-skip'), { opacity: 0, duration: 0.2 }, 'exit')
-        .call(trail, null, 'exit')
-        .to([q('.pl-exit'), brand], { y: () => innerHeight * 1.25, duration: 0.95, ease: 'power3.inOut' }, 'exit')
-        .to(q('.pl-band'), { y: () => innerHeight * 1.25, duration: 0.95, ease: 'power3.inOut' }, 'exit+=0.05')
-        .call(lift, null, 'exit+=0.25');
+        .call(measure, null, 0)
+        // 1) bulatan muncul di tengah
+        .fromTo(dot, { scale: 0 }, { scale: () => d / S, duration: 0.6, ease: 'power2.out', immediateRender: false }, 0.05)
+        // 2) bergeser lurus ke kiri, "AL HAUDH" keluar dari sisi kanan bulatan.
+        //    Tepi kiri tulisan selalu menempel di kanan bulatan (gerak & easing sama),
+        //    sementara bagian yang terlihat melebar ke kanan → grup berakhir tepat di tengah.
+        .addLabel('slide', 0.8)
+        .to(dot, { x: () => -(gap + W) / 2, duration: 0.95, ease }, 'slide')
+        .fromTo(text,
+          { x: () => d / 2 + gap + W / 2, clipPath: 'inset(0% 100% 0% 0%)' },
+          { x: () => (d + gap) / 2, clipPath: 'inset(0% 0% 0% 0%)', duration: 0.95, ease, immediateRender: false },
+          'slide')
+        // 3) keluar: tulisan & latar memudar, bulatan pindah ke hero
+        .addLabel('exit', 2.35)
+        .call(measureTarget, null, 'exit')
+        .to(text, { opacity: 0, duration: 0.35, ease: 'power2.in' }, 'exit')
+        .call(startHero, null, 'exit+=0.2')
+        .to(bg, { opacity: 0, duration: 0.85, ease: 'power2.inOut' }, 'exit+=0.15')
+        .to(dot, {
+          x: () => target.x, y: () => target.y, scale: 1, opacity: HERO_CIRCLE_OPACITY,
+          duration: 1.15, ease
+        }, 'exit');
 
-      // Lewati: langsung lompat tepat sebelum bagian keluar
+      // Mulai setelah font siap (maks. 0,7 dtk) agar lebar tulisan terukur tepat
+      const fontsReady = document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve();
+      Promise.race([fontsReady, new Promise(r => setTimeout(r, 700))]).then(() => { if (!finished) tl.play(); });
+
+      // Lewati: lompat tepat sebelum bagian keluar, lalu keluar sedikit lebih cepat
       skip = () => {
         if (finished || tl.time() >= tl.labels.exit) return;
-        tl.seek(tl.labels.exit - 0.01).timeScale(1.5); // keluar lebih cepat saat dilewati
+        measure();
+        tl.seek(tl.labels.exit - 0.01).timeScale(1.5).play();
       };
     } else {
-      // Tanpa GSAP: tampil statis, lalu keluar dengan transisi CSS
+      // Tanpa GSAP: tulisan tampil, lalu tirai memudar (bulatan hero tetap dengan animasi CSS)
       curtain.classList.add('pl-static');
       let started = false;
       const out = () => {
         if (started) return;
         started = true;
         curtain.classList.add('lift-up');
-        setTimeout(lift, 300);
-        setTimeout(finish, 1500);
+        startHero();
+        setTimeout(finish, 650);
       };
-      setTimeout(out, 1400);
+      setTimeout(out, 1300);
       skip = out;
     }
     curtain.addEventListener('click', () => skip());
@@ -542,6 +557,37 @@
         onCurtainLift = () => intro.play();
       }
 
+      // --- Bulatan hero: melayang pelan & terus-menerus (lintasan Lissajous, tanpa henti/patah) ---
+      const circle = $('.hero-circle');
+      if (circle) {
+        circle.style.animation = 'none';
+        const setX = gsap.quickSetter(circle, 'x', 'px');
+        const setY = gsap.quickSetter(circle, 'y', 'px');
+        const setS = gsap.quickSetter(circle, 'scale');
+        const TAU = Math.PI * 2;
+        let t0 = 0, running = false, visible = true, started = false;
+        const tick = () => {
+          const t = (performance.now() - t0) / 1000;
+          const ramp = Math.min(1, t / 2.5), k = ramp * ramp * (3 - 2 * ramp); // mulai lembut dari diam
+          const ax = Math.min(innerWidth * 0.06, 80), ay = Math.min(innerHeight * 0.06, 56);
+          setX(Math.sin(t * TAU / 17) * ax * k);   // periode panjang = gerak pelan (±30 px/dtk)
+          setY(Math.sin(t * TAU / 12) * ay * k);
+          setS(1 + Math.sin(t * TAU / 14) * 0.04 * k);
+        };
+        const sync = () => {
+          const on = started && visible;
+          if (on && !running) gsap.ticker.add(tick);
+          if (!on && running) gsap.ticker.remove(tick);
+          running = on;
+        };
+        const begin = () => { if (started) return; started = true; t0 = performance.now(); sync(); };
+        // hemat CPU: berhenti saat hero tidak terlihat
+        if ('IntersectionObserver' in window) {
+          new IntersectionObserver(es => { visible = es[0].isIntersecting; sync(); }).observe($('.hero'));
+        }
+        if (curtainShown && !curtainLifted) onCurtainDone = begin; else begin();
+      }
+
       // --- Hero parallax (scrub) ---
       gsap.timeline({ scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: 0.6 } })
         .fromTo('.hero-parallax-bg', { scale: 1.1, yPercent: 0 }, { scale: 1.1, yPercent: 14, ease: 'none' }, 0)
@@ -577,7 +623,7 @@
       reveal('.stats-card', { y: 40 }, { start: 'top 99%' });
       reveal('.visi-card-hero, .misi-tile', { y: 40 });
       reveal('.program-segmented-bar, .program-showcase-box', { y: 36 });
-      reveal('.timeline-card', { x: 36 });
+      reveal('.timeline-card', { x: -36 }); // dari sisi garis timeline (kiri) — dari kanan bisa melebarkan halaman di HP
       reveal('.facility-card', { y: 40 });
       reveal('.galeri-item', { y: 50, scale: 0.94 }, { stagger: 0.06, duration: 0.9 });
       reveal('.lokasi-card, .map-frame-box', { y: 40 });

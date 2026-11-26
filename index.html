@@ -38,7 +38,7 @@
     href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap"
     rel="stylesheet">
 
-  <link rel="stylesheet" href="style.css?v=10">
+  <link rel="stylesheet" href="style.css?v=11">
 
   <!-- Animasi pembuka hanya tampil sekali per sesi & dilewati bila pengguna memilih kurangi animasi.
        Tambahkan ?intro di URL untuk memaksa animasi tampil lagi (berguna saat mengetes). -->
@@ -146,27 +146,14 @@
 
   <!-- =========================================================================
        0. WELCOMING ANIMATION (GSAP) — hanya kunjungan pertama per sesi, bisa dilewati
-          (klik / tombol apa pun). Tanpa GSAP → versi CSS sederhana.
-          Alur: logo muncul di layar terang → bulatan logo membesar memenuhi layar →
-          logo mengecil & tulisan "AL HAUDH" keluar dari balik bulatan →
-          panel hijau turun dengan tepi melengkung, website tampil.
+          (klik / tombol apa pun / scroll). Tanpa GSAP → versi CSS sederhana.
+          Alur: bulatan muncul → bergeser lurus ke samping sambil "AL HAUDH" terbuka →
+          latar memudar & bulatan pindah ke hero, lalu terus melayang di sana.
        ========================================================================= -->
   <div id="app-preloader" aria-hidden="true">
     <div class="pl-bg"></div>
-    <div class="pl-wave"></div>
-    <div class="pl-disc"></div>
-    <div class="pl-band"></div>
-    <div class="pl-exit"></div>
-
-    <div class="pl-brand">
-      <div class="pl-mark">
-        <img class="pl-logo-color" src="img/logo-300.webp" alt="" width="300" height="300" fetchpriority="high">
-        <img class="pl-logo-white" src="img/logo-white-300.webp" alt="" width="300" height="300">
-      </div>
-      <div class="pl-wrap"><span class="pl-wordmark">AL HAUDH</span></div>
-    </div>
-
-    <button type="button" class="pl-skip" tabindex="-1">Lewati</button>
+    <span class="pl-dot"></span>
+    <span class="pl-text">AL HAUDH</span>
   </div>
 
   <!-- =========================================================================
@@ -240,6 +227,8 @@
          ========================================================================= -->
     <section class="hero" id="beranda">
       <div class="hero-parallax-bg" aria-hidden="true"></div>
+      <!-- Bulatan dari animasi pembuka: terus melayang pelan di belakang konten -->
+      <div class="hero-circle" aria-hidden="true"></div>
       <div class="hero-architectural-title" aria-hidden="true">AL HAUDH</div>
 
       <div class="orb o1" aria-hidden="true">
@@ -1212,7 +1201,7 @@
   <!-- GSAP + ScrollTrigger (disimpan lokal di /vendor, tanpa CDN pihak ketiga) -->
   <script src="vendor/gsap.min.js" defer></script>
   <script src="vendor/ScrollTrigger.min.js" defer></script>
-  <script src="script.js?v=10" defer></script>
+  <script src="script.js?v=11" defer></script>
 </body>
 
 </html>

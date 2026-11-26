@@ -99,19 +99,14 @@ body.preloader-active {
 }
 
 /* =========================================================================
-   0. WELCOMING ANIMATION (digerakkan GSAP di script.js)
-   Alur: logo di layar terang → bulatan membesar memenuhi layar → logo mengecil &
-   tulisan "AL HAUDH" keluar dari balik bulatan → panel hijau turun, website tampil.
-   - State awal di bawah = "belum muncul"; GSAP menganimasikan ke state akhir.
-   - .pl-static = versi tanpa GSAP (langsung state akhir); .lift-up = keluar via CSS.
+   0. WELCOMING ANIMATION (digerakkan GSAP di script.js) — sederhana & linear:
+   bulatan muncul → bergeser ke samping sambil "AL HAUDH" terbuka →
+   latar memudar, bulatan pindah ke hero (.hero-circle) dan terus melayang.
    ========================================================================= */
 #app-preloader {
-  --pl-green: #0A2410;
   position: fixed;
   inset: 0;
   z-index: 999999;
-  display: grid;
-  place-items: center;
   overflow: hidden;
   cursor: pointer;
   /* pengaman: bila JavaScript gagal total, tirai tetap hilang setelah 6 detik */
@@ -134,140 +129,85 @@ body.preloader-active {
   to { overflow: auto; }
 }
 
-/* --- Latar terang di awal --- */
 .pl-bg {
   position: absolute;
   inset: 0;
-  background: radial-gradient(circle at 50% 46%, #FFFFFF 0%, #F1F7EA 62%, #E4EEDA 100%);
+  background: var(--forest-800);
 }
 
-/* --- Bulatan yang membesar dari logo (diskalakan → ringan, berjalan di GPU) --- */
-.pl-wave,
-.pl-disc {
+/* Ukuran elemen = ukuran akhir bulatan di hero; saat intro tampil diperkecil (scale)
+   supaya tetap tajam ketika membesar. */
+.pl-dot {
   position: absolute;
   left: 50%;
   top: 50%;
-  width: 150vmax;
-  height: 150vmax;
-  margin: -75vmax 0 0 -75vmax;
+  width: 300px;
+  height: 300px;
+  margin: -150px 0 0 -150px; /* dipusatkan lewat margin (JS menyesuaikan), bukan translate */
   border-radius: 50%;
+  background: var(--accent-lime);
   transform: scale(0);
 }
 
-.pl-wave {
-  background: #4E9A63; /* hijau lebih terang, memimpin di depan */
-}
-
-.pl-disc {
-  background: var(--pl-green);
-}
-
-/* --- Panel keluar: tepi atas melengkung (kubah), turun ke bawah --- */
-.pl-band,
-.pl-exit {
+/* Catatan: jangan pakai properti CSS `translate` pada elemen yang digerakkan GSAP —
+   GSAP menggabungkannya ke transform dan persentasenya bisa hilang (terjadi di HP). */
+.pl-text {
   position: absolute;
-  left: -10%;
-  right: -10%;
-  top: -20vh;
-  height: 120vh;
-  border-radius: 50% 50% 0 0 / 20vh 20vh 0 0;
-  opacity: 0;
-}
-
-.pl-band {
-  background: #BFDDA0; /* pita hijau muda yang menyusul */
-}
-
-.pl-exit {
-  background: var(--pl-green);
-}
-
-/* --- Logo + tulisan --- */
-#app-preloader > .pl-brand {
-  grid-area: 1 / 1;
-}
-
-.pl-brand {
-  --E: clamp(96px, 24vmin, 150px); /* ukuran logo saat besar */
-  position: relative;
-  z-index: 4;
-  display: flex;
-  align-items: center;
-  pointer-events: none;
-  user-select: none;
-}
-
-.pl-mark {
-  position: relative;
-  flex-shrink: 0;
-  width: var(--E);
-  height: var(--E);
-  opacity: 0;
-  transform: scale(0.5);
-}
-
-.pl-mark img {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-}
-
-.pl-logo-color {
-  filter: drop-shadow(0 12px 26px rgba(10, 34, 15, 0.22));
-}
-
-.pl-logo-white {
-  opacity: 0;
-}
-
-.pl-wrap {
-  display: flex; /* flex: tulisan tetap selebar aslinya walau wadahnya 0 → bisa diukur */
-  overflow: hidden;
-  width: 0;
-}
-
-.pl-wordmark {
-  display: block;
-  padding: 0.08em 0.06em 0.1em 0.32em;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  font: 800 clamp(2.6rem, 8vw, 5rem) / 1 var(--font-display);
+  letter-spacing: -0.02em;
+  color: #FFFFFF;
   white-space: nowrap;
-  font: 800 calc(var(--E) * 0.42) / 1 var(--font-display);
-  letter-spacing: -0.01em;
-  color: #FFFFFF;
+  clip-path: inset(0 100% 0 0);
 }
 
-.pl-skip {
-  position: absolute;
-  z-index: 5;
-  right: max(18px, env(safe-area-inset-right));
-  bottom: max(18px, env(safe-area-inset-bottom));
-  padding: 8px 16px;
-  border-radius: 999px;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  background: rgba(10, 34, 16, 0.55);
-  color: #FFFFFF;
-  font: 600 0.78rem var(--font-body);
-  letter-spacing: 0.06em;
-  opacity: 0;
-}
-
-.pl-skip:hover {
-  background: rgba(10, 34, 16, 0.8);
-}
-
-/* --- Versi tanpa GSAP: langsung state akhir, keluar dengan transisi CSS --- */
-#app-preloader.pl-static .pl-bg { opacity: 0; }
-#app-preloader.pl-static .pl-disc { transform: none; }
-#app-preloader.pl-static .pl-mark { opacity: 1; transform: none; width: calc(var(--E) * 0.46); height: calc(var(--E) * 0.46); }
-#app-preloader.pl-static .pl-logo-color { opacity: 0; }
-#app-preloader.pl-static .pl-logo-white { opacity: 1; }
-#app-preloader.pl-static .pl-wrap { width: auto; }
-
+/* Tanpa GSAP: tulisan langsung tampil, lalu tirai memudar */
+#app-preloader.pl-static .pl-text { clip-path: none; }
+#app-preloader.pl-static .pl-dot { display: none; }
 #app-preloader.lift-up {
+  opacity: 0;
   pointer-events: none;
-  transform: translateY(105%);
-  transition: transform 0.9s cubic-bezier(0.77, 0, 0.175, 1);
+  transition: opacity 0.6s ease;
+}
+
+/* =========================================================================
+   Bulatan di hero: kelanjutan bulatan intro, melayang pelan di belakang konten
+   (gerakan digerakkan GSAP; animasi CSS di bawah hanya cadangan tanpa GSAP)
+   ========================================================================= */
+.hero-circle {
+  --hc: clamp(240px, 30vw, 430px);
+  position: absolute;
+  z-index: 2;
+  left: 64%;
+  top: 40%;
+  width: var(--hc);
+  height: var(--hc);
+  margin: calc(var(--hc) / -2) 0 0 calc(var(--hc) / -2); /* pusat di (left, top) tanpa translate */
+  border-radius: 50%;
+  background: var(--accent-lime);
+  opacity: 0.14;
+  pointer-events: none;
+  animation: heroCircleFloat 14s ease-in-out infinite;
+}
+
+@keyframes heroCircleFloat {
+  0%, 100% { transform: translate(0, 0); }
+  33% { transform: translate(4vw, -3vh); }
+  66% { transform: translate(-3vw, 3vh); }
+}
+
+@media (max-width: 580px) {
+  .hero-circle {
+    --hc: 62vw;
+    left: 74%;
+    top: 22%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-circle { animation: none; }
 }
 
 /* Ambient atmospheric background textures for glassmorphism refraction */
@@ -2518,3 +2458,6 @@ a:focus-visible, button:focus-visible {
   .timeline-card { padding: 24px 22px; }
   .timeline-card::before { left: -32px; top: 28px; width: 17px; height: 17px; }
 }
+
+/* Pengaman: elemen yang sedang dianimasikan masuk tidak boleh melebarkan halaman di HP */
+main { overflow-x: clip; }
