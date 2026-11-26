@@ -20,9 +20,9 @@
 
   /* ------------------------------------------------------------------
      0. Welcoming animation (preloader)
-        Urutan: ornamen bintang segi-8 tergambar + cincin progres → logo muncul →
-        "Ahlan wa Sahlan" → "SMP Al Haudh" naik per kata → tagline →
-        konten memudar → panel gelap & lime naik bergelombang dari tengah → hero.
+        Urutan: logo muncul di layar terang → bulatan logo membesar memenuhi layar →
+        logo mengecil & tulisan "AL HAUDH" keluar dari balik bulatan →
+        panel hijau turun dengan tepi melengkung (pita hijau muda menyusul) → hero.
         Bisa dilewati: klik, tombol keyboard, scroll, atau sentuh-geser.
      ------------------------------------------------------------------ */
   (function preloader() {
@@ -59,37 +59,55 @@
     let skip = () => { };
     if (hasGSAP) {
       const gsap = window.gsap;
-      const q = s => curtain.querySelectorAll(s);
-      const wave = { each: 0.07, from: 'center' };
+      const q = s => curtain.querySelector(s);
+      const brand = q('.pl-brand'), mark = q('.pl-mark'), wrap = q('.pl-wrap'), word = q('.pl-wordmark');
+      const waveEl = q('.pl-wave'), disc = q('.pl-disc');
+      const E = mark.offsetWidth;
+      // bulatan mulai tepat seukuran logo, lalu membesar menutup seluruh layar
+      gsap.set([waveEl, disc], { scale: E / disc.offsetWidth });
+
+      // Jejak tulisan saat turun (seperti efek di video referensi)
+      function trail() {
+        const ghosts = [0.34, 0.16].map(op => {
+          const g = brand.cloneNode(true);
+          g.style.opacity = op;
+          curtain.insertBefore(g, brand);
+          return g;
+        });
+        gsap.to(ghosts, { y: innerHeight * 1.25, opacity: 0, duration: 0.95, ease: 'power3.inOut', stagger: 0.07, delay: 0.06 });
+      }
+
       const tl = gsap.timeline({ defaults: { ease: 'power3.out' }, onComplete: finish });
-
       tl
-        // 1) ornamen & cahaya
-        .to(q('.pl-glow'), { opacity: 1, duration: 1.4, ease: 'sine.out' }, 0)
-        .fromTo(q('.pl-star'), { rotation: -60, scale: 0.8 }, { rotation: 0, scale: 1, duration: 2, ease: 'expo.out' }, 0)
-        .to(q('.pl-draw'), { strokeDashoffset: 0, duration: 1.5, stagger: 0.15, ease: 'power2.inOut' }, 0)
-        .to(q('.pl-orbit'), { opacity: 1, duration: 1 }, 0.3)
-        .to(q('.pl-ring-arc'), { strokeDashoffset: 0, duration: 1.4, ease: 'power1.inOut' }, 0.1)
-        // 2) logo
-        .to(q('.pl-logo'), { opacity: 1, scale: 1, duration: 1.1, ease: 'back.out(1.7)' }, 0.15)
-        // 3) teks sambutan
-        .to(q('.pl-kicker'), { opacity: 1, letterSpacing: '0.32em', duration: 1.1 }, 0.45)
-        .to(q('.pl-word'), { y: 0, duration: 0.9, stagger: 0.09, ease: 'power4.out' }, 0.55)
-        .to(q('.pl-tag'), { opacity: 1, y: 0, duration: 0.8 }, 0.95)
-        .to(q('.pl-skip'), { opacity: 1, duration: 0.4 }, 0.9)
-        // 4) keluar
-        .addLabel('exit', 1.85)
-        .to(q('.pl-center'), { y: -36, opacity: 0, scale: 0.96, duration: 0.55, ease: 'power2.in' }, 'exit')
-        .to(q('.pl-star'), { rotation: 40, scale: 1.3, opacity: 0, duration: 0.8, ease: 'power2.in' }, 'exit')
-        .to(q('.pl-glow, .pl-skip'), { opacity: 0, duration: 0.4 }, 'exit')
-        .to(q('.pl-panels--front span'), { yPercent: -100, duration: 1, ease: 'power4.inOut', stagger: wave }, 'exit+=0.3')
-        .to(q('.pl-panels--back span'), { yPercent: -100, duration: 1, ease: 'power4.inOut', stagger: wave }, 'exit+=0.38')
-        .call(lift, null, 'exit+=0.45');
+        // 1) logo muncul di layar terang
+        .to(mark, { opacity: 1, scale: 1, duration: 0.7, ease: 'back.out(1.7)' }, 0.1)
+        .to(q('.pl-skip'), { opacity: 1, duration: 0.4 }, 0.6)
+        // antisipasi: logo sedikit mengempis sebelum bulatannya membesar
+        .to(mark, { scale: 0.9, duration: 0.18, ease: 'power2.in' }, 0.8)
+        .to(mark, { scale: 1, duration: 0.6, ease: 'elastic.out(1, 0.55)' }, 0.98)
+        // 2) bulatan logo membesar memenuhi layar (hijau terang memimpin, hijau tua menyusul)
+        .to(waveEl, { scale: 1, duration: 0.8, ease: 'power3.in' }, 0.95)
+        .to(disc, { scale: 1, duration: 0.8, ease: 'power3.in' }, 1.05)
+        .to(q('.pl-logo-color'), { opacity: 0, duration: 0.3 }, 1.25)
+        .to(q('.pl-logo-white'), { opacity: 1, duration: 0.3 }, 1.25)
+        // 3) logo mengecil, lalu tulisan AL HAUDH keluar dari balik bulatan
+        .to(mark, { width: () => E * 0.46, height: () => E * 0.46, duration: 0.55, ease: 'power3.inOut' }, 1.95)
+        .to(wrap, { width: () => word.offsetWidth, duration: 0.75, ease: 'power3.inOut' }, 2.25)
+        .fromTo(word, { xPercent: -100 }, { xPercent: 0, duration: 0.75, ease: 'power3.inOut' }, 2.25)
+        // 4) keluar: panel hijau (tepi melengkung) turun membawa tulisan, pita hijau muda menyusul
+        .addLabel('exit', 3.35)
+        .set([q('.pl-band'), q('.pl-exit')], { opacity: 1 }, 'exit')
+        .set([waveEl, disc, q('.pl-bg')], { autoAlpha: 0 }, 'exit')
+        .to(q('.pl-skip'), { opacity: 0, duration: 0.2 }, 'exit')
+        .call(trail, null, 'exit')
+        .to([q('.pl-exit'), brand], { y: () => innerHeight * 1.25, duration: 0.95, ease: 'power3.inOut' }, 'exit')
+        .to(q('.pl-band'), { y: () => innerHeight * 1.25, duration: 0.95, ease: 'power3.inOut' }, 'exit+=0.05')
+        .call(lift, null, 'exit+=0.25');
 
-      // Lewati: langsung lompat ke bagian keluar
+      // Lewati: langsung lompat tepat sebelum bagian keluar
       skip = () => {
         if (finished || tl.time() >= tl.labels.exit) return;
-        tl.seek('exit').timeScale(1.6); // keluar lebih cepat saat dilewati
+        tl.seek(tl.labels.exit - 0.01).timeScale(1.5); // keluar lebih cepat saat dilewati
       };
     } else {
       // Tanpa GSAP: tampil statis, lalu keluar dengan transisi CSS

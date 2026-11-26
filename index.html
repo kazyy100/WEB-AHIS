@@ -38,7 +38,7 @@
     href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap"
     rel="stylesheet">
 
-  <link rel="stylesheet" href="style.css?v=9">
+  <link rel="stylesheet" href="style.css?v=10">
 
   <!-- Animasi pembuka hanya tampil sekali per sesi & dilewati bila pengguna memilih kurangi animasi.
        Tambahkan ?intro di URL untuk memaksa animasi tampil lagi (berguna saat mengetes). -->
@@ -147,35 +147,23 @@
   <!-- =========================================================================
        0. WELCOMING ANIMATION (GSAP) — hanya kunjungan pertama per sesi, bisa dilewati
           (klik / tombol apa pun). Tanpa GSAP → versi CSS sederhana.
+          Alur: logo muncul di layar terang → bulatan logo membesar memenuhi layar →
+          logo mengecil & tulisan "AL HAUDH" keluar dari balik bulatan →
+          panel hijau turun dengan tepi melengkung, website tampil.
        ========================================================================= -->
   <div id="app-preloader" aria-hidden="true">
-    <div class="pl-panels pl-panels--back">
-      <span style="--i:2"></span><span style="--i:1"></span><span style="--i:0"></span><span style="--i:1"></span><span style="--i:2"></span>
-    </div>
-    <div class="pl-panels pl-panels--front">
-      <span style="--i:2"></span><span style="--i:1"></span><span style="--i:0"></span><span style="--i:1"></span><span style="--i:2"></span>
-    </div>
+    <div class="pl-bg"></div>
+    <div class="pl-wave"></div>
+    <div class="pl-disc"></div>
+    <div class="pl-band"></div>
+    <div class="pl-exit"></div>
 
-    <div class="pl-center">
-      <div class="pl-emblem">
-        <div class="pl-glow"></div>
-        <!-- Ornamen bintang segi-8 (geometri Islami) + cincin progres -->
-        <svg class="pl-star" viewBox="-100 -100 200 200">
-          <circle class="pl-orbit" r="92" />
-          <rect class="pl-draw" x="-62" y="-62" width="124" height="124" pathLength="1" />
-          <rect class="pl-draw" x="-62" y="-62" width="124" height="124" pathLength="1" transform="rotate(45)" />
-          <circle class="pl-ring-track" r="58" />
-          <circle class="pl-ring-arc" r="58" pathLength="1" transform="rotate(-90)" />
-        </svg>
-        <img class="pl-logo" src="img/logo-white-300.webp" alt="" width="300" height="300" fetchpriority="high">
+    <div class="pl-brand">
+      <div class="pl-mark">
+        <img class="pl-logo-color" src="img/logo-300.webp" alt="" width="300" height="300" fetchpriority="high">
+        <img class="pl-logo-white" src="img/logo-white-300.webp" alt="" width="300" height="300">
       </div>
-      <p class="pl-kicker">Ahlan wa Sahlan</p>
-      <p class="pl-title">
-        <span class="pl-mask"><span class="pl-word">SMP</span></span>
-        <span class="pl-mask"><span class="pl-word">Al</span></span>
-        <span class="pl-mask"><span class="pl-word">Haudh</span></span>
-      </p>
-      <p class="pl-tag"><span>Berilmu</span><i></i><span>Berakhlak</span><i></i><span>Berprestasi</span></p>
+      <div class="pl-wrap"><span class="pl-wordmark">AL HAUDH</span></div>
     </div>
 
     <button type="button" class="pl-skip" tabindex="-1">Lewati</button>
@@ -1224,7 +1212,7 @@
   <!-- GSAP + ScrollTrigger (disimpan lokal di /vendor, tanpa CDN pihak ketiga) -->
   <script src="vendor/gsap.min.js" defer></script>
   <script src="vendor/ScrollTrigger.min.js" defer></script>
-  <script src="script.js?v=9" defer></script>
+  <script src="script.js?v=10" defer></script>
 </body>
 
 </html>
