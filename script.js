@@ -17,17 +17,16 @@
   const finePointer = matchMedia('(hover: hover) and (pointer: fine)').matches;
   const hasGSAP = !!(window.gsap && window.ScrollTrigger);
   let curtainShown = false, curtainLifted = false, onCurtainLift = null, onCurtainDone = null;
-  const HERO_CIRCLE_OPACITY = 0.14; // sama dengan opacity .hero-circle di CSS
 
   /* ------------------------------------------------------------------
      0. Welcoming animation (preloader) — sederhana & linear
         Bulatan muncul → bergeser lurus ke samping sambil "AL HAUDH" terbuka →
-        tulisan & latar memudar, bulatan terbang ke posisinya di hero (.hero-circle)
-        lalu terus melayang di sana. Bisa dilewati: klik, tombol keyboard, scroll, geser.
+        tulisan & latar memudar, bulatan terbang & berubah menjadi bola logo di hero
+        (.orb.o1), yang lalu terus bergerak pelan. Bisa dilewati: klik, tombol, scroll, geser.
      ------------------------------------------------------------------ */
   (function preloader() {
     const curtain = $('#app-preloader');
-    const heroCircle = $('.hero-circle');
+    const orb = $('.hero .orb.o1');
     const release = () => body.classList.remove('preloader-active');
     if (!curtain || root.classList.contains('no-preloader')) {
       if (curtain) curtain.remove();
@@ -52,9 +51,10 @@
       finished = true;
       startHero();
       release();
-      if (heroCircle) heroCircle.style.opacity = ''; // bulatan hero mengambil alih
+      if (orb) orb.style.opacity = ''; // bola logo mengambil alih
       curtain.remove();
       if (onCurtainDone) onCurtainDone();
+      else if (orb) orb.style.animation = ''; // tanpa animasi GSAP → kembali ke animasi CSS
       ['keydown', 'wheel', 'touchmove'].forEach(t => removeEventListener(t, skip));
     }
     setTimeout(finish, 6000); // batas atas, apa pun yang terjadi
@@ -66,12 +66,13 @@
       const text = curtain.querySelector('.pl-text');
       const bg = curtain.querySelector('.pl-bg');
 
-      // Bulatan intro dibuat seukuran bulatan hero, lalu diperkecil → tetap tajam saat membesar
-      if (heroCircle) {
-        heroCircle.style.animation = 'none';
-        heroCircle.style.opacity = '0';
+      // Bulatan intro dibuat seukuran bola logo, lalu diperkecil → tetap tajam saat membesar.
+      // Bola logo disembunyikan dulu & diam di posisi dasarnya agar bisa diukur tepat.
+      if (orb) {
+        orb.style.animation = 'none';
+        orb.style.opacity = '0';
       }
-      const S = heroCircle ? heroCircle.offsetWidth : 300;
+      const S = orb ? orb.offsetWidth : 300;
       gsap.set(dot, { width: S, height: S, marginLeft: -S / 2, marginTop: -S / 2 });
       gsap.set(text, { xPercent: -50, yPercent: -50, x: 0, y: 0 }); // pusatkan lewat GSAP (lihat catatan di CSS)
 
@@ -83,8 +84,8 @@
         W = text.offsetWidth;
       };
       const measureTarget = () => {
-        if (!heroCircle) { target = { x: 0, y: 0 }; return; }
-        const r = heroCircle.getBoundingClientRect();
+        if (!orb) { target = { x: 0, y: 0 }; return; }
+        const r = orb.getBoundingClientRect();
         target = { x: r.left + r.width / 2 - innerWidth / 2, y: r.top + r.height / 2 - innerHeight / 2 };
       };
 
@@ -103,16 +104,17 @@
           { x: () => d / 2 + gap + W / 2, clipPath: 'inset(0% 100% 0% 0%)' },
           { x: () => (d + gap) / 2, clipPath: 'inset(0% 0% 0% 0%)', duration: 0.95, ease, immediateRender: false },
           'slide')
-        // 3) keluar: tulisan & latar memudar, bulatan pindah ke hero
+        // 3) keluar: tulisan & latar memudar, bulatan terbang ke bola logo sambil membesar
+        //    & memutih, lalu bola logo muncul menggantikannya (crossfade di posisi yang sama)
         .addLabel('exit', 2.35)
         .call(measureTarget, null, 'exit')
         .to(text, { opacity: 0, duration: 0.35, ease: 'power2.in' }, 'exit')
         .call(startHero, null, 'exit+=0.2')
         .to(bg, { opacity: 0, duration: 0.85, ease: 'power2.inOut' }, 'exit+=0.15')
-        .to(dot, {
-          x: () => target.x, y: () => target.y, scale: 1, opacity: HERO_CIRCLE_OPACITY,
-          duration: 1.15, ease
-        }, 'exit');
+        .to(dot, { x: () => target.x, y: () => target.y, scale: 1, duration: 1.15, ease }, 'exit')
+        .to(dot, { backgroundColor: '#EDF4E9', duration: 0.9, ease: 'power1.inOut' }, 'exit+=0.2')
+        .to(orb || {}, { opacity: 1, duration: 0.45, ease: 'power1.out' }, 'exit+=0.85')
+        .to(dot, { opacity: 0, duration: 0.4, ease: 'power1.in' }, 'exit+=0.95');
 
       // Mulai setelah font siap (maks. 0,7 dtk) agar lebar tulisan terukur tepat
       const fontsReady = document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve();
@@ -551,28 +553,26 @@
       if (curtainShown && !curtainLifted) {
         const intro = gsap.timeline({ paused: true, defaults: { ease, duration: 0.95 } })
           .from('.hero-inner > *', { y: 36, opacity: 0, stagger: 0.09 }, 0.2)
-          .from('.hero .orb.o1', { opacity: 0, duration: 0.8 }, 0.3)
-          .from('.hero .orb.o1 img', { scale: 0.6, rotation: -18, duration: 1.2, ease: 'back.out(1.7)' }, 0.3)
           .from('.hero-architectural-title', { xPercent: -8, opacity: 0, duration: 1.3 }, 0.1);
+        // bola logo tidak ikut di sini: ia muncul dari bulatan animasi pembuka
         onCurtainLift = () => intro.play();
       }
 
-      // --- Bulatan hero: melayang pelan & terus-menerus (lintasan Lissajous, tanpa henti/patah) ---
-      const circle = $('.hero-circle');
+      // --- Bola logo hero: terus bergerak pelan (lintasan Lissajous, tanpa henti/patah) ---
+      //     transform ditulis langsung (bukan lewat gsap.set) agar properti `translate`
+      //     yang dipakai efek parallax scroll (--orb-y) tidak diambil alih GSAP.
+      const circle = $('.hero .orb.o1');
       if (circle) {
-        circle.style.animation = 'none';
-        const setX = gsap.quickSetter(circle, 'x', 'px');
-        const setY = gsap.quickSetter(circle, 'y', 'px');
-        const setS = gsap.quickSetter(circle, 'scale');
         const TAU = Math.PI * 2;
         let t0 = 0, running = false, visible = true, started = false;
         const tick = () => {
           const t = (performance.now() - t0) / 1000;
           const ramp = Math.min(1, t / 2.5), k = ramp * ramp * (3 - 2 * ramp); // mulai lembut dari diam
-          const ax = Math.min(innerWidth * 0.06, 80), ay = Math.min(innerHeight * 0.06, 56);
-          setX(Math.sin(t * TAU / 17) * ax * k);   // periode panjang = gerak pelan (±30 px/dtk)
-          setY(Math.sin(t * TAU / 12) * ay * k);
-          setS(1 + Math.sin(t * TAU / 14) * 0.04 * k);
+          const ax = Math.min(innerWidth * 0.035, 48), ay = Math.min(innerHeight * 0.045, 36);
+          const x = Math.sin(t * TAU / 13) * ax * k;   // periode panjang = gerak pelan
+          const y = Math.sin(t * TAU / 9) * ay * k;
+          const r = Math.sin(t * TAU / 11) * 5 * k;    // sedikit berayun
+          circle.style.transform = 'translate3d(' + x.toFixed(2) + 'px,' + y.toFixed(2) + 'px,0) rotate(' + r.toFixed(2) + 'deg)';
         };
         const sync = () => {
           const on = started && visible;
@@ -580,7 +580,13 @@
           if (!on && running) gsap.ticker.remove(tick);
           running = on;
         };
-        const begin = () => { if (started) return; started = true; t0 = performance.now(); sync(); };
+        const begin = () => {
+          if (started) return;
+          started = true;
+          circle.style.animation = 'none'; // gantikan animasi CSS (floatMarble) dengan gerak ini
+          t0 = performance.now();
+          sync();
+        };
         // hemat CPU: berhenti saat hero tidak terlihat
         if ('IntersectionObserver' in window) {
           new IntersectionObserver(es => { visible = es[0].isIntersecting; sync(); }).observe($('.hero'));
