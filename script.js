@@ -1,614 +1,842 @@
-// 0. Korowa-Style Curtain Preloader (Lifts up automatically in 2 seconds)
-(function initKorowaCurtain() {
-  const curtain = document.getElementById('app-preloader');
-  if (!curtain) return;
-
-  const DISPLAY_TIME_MS = 2000; // Exactly 2 seconds as requested
-
-  function liftCurtain() {
-    if (curtain.classList.contains('lift-up')) return;
-    curtain.classList.add('lift-up');
-    document.body.classList.remove('preloader-active');
-    setTimeout(() => {
-      curtain.style.display = 'none';
-    }, 1100);
-  }
-
-  // Auto lift up after 2 seconds
-  setTimeout(liftCurtain, DISPLAY_TIME_MS);
-})();
-// 1. Shrink Header on Scroll (Scroll Effect 5)
-const navbar = document.getElementById('navbar');
-window.addEventListener('scroll', () => {
-  if (window.scrollY > 30) {
-    navbar.classList.add('scrolled');
-  } else {
-    navbar.classList.remove('scrolled');
-  }
-}, { passive: true });
-
-// 2. Mobile Menu Drawer
-function toggleMobileMenu() {
-  const drawer = document.getElementById('mobileMenu');
-  drawer.classList.toggle('open');
-}
-function closeMobileMenu() {
-  const drawer = document.getElementById('mobileMenu');
-  drawer.classList.remove('open');
-}
-
-// 3. Program Tabs Data & Switcher
-const programData = [
-  {
-    tag: "PILAR 01 — TARGET 5 JUZ MUTQIN",
-    title: "Tahfizhul Qur'an Bersanad Talaqqi",
-    desc: "Program hafalan Al-Qur'an intensif dengan target kelulusan 5 juz mutqin. Menggunakan metode talaqqi tajwid bersanad bersama asatidz hafidz, dilengkapi evaluasi harian dan ujian tasmi' resmi di hadapan orang tua.",
-    features: [
-      "Bimbingan talaqqi makharijul huruf & tajwid matan Jazariyah",
-      "Halaqah pagi rutin sebelum KBM akademik dimulai",
-      "Pemberian syahadah tahfizh resmi 3 & 5 juz untuk bekal studi lanjut"
-    ],
-    cardHeader: "Halaqah Eksklusif & Terbimbing",
-    cardBody: "Setiap halaqah dibimbing oleh ustadz yang berdedikasi tinggi dengan rasio guru-siswa yang ideal, memastikan ketelitian bacaan dan kekuatan hafalan setiap murid."
-  },
-  {
-    tag: "PILAR 02 — KEMENDIKBUDRISTEK TERAKREDITASI A",
-    title: "Kurikulum Terpadu & Nalar Akademik",
-    desc: "Memadukan kurikulum nasional Kemendikbud dengan wawasan keislaman secara integral. Menyiapkan peserta didik unggul dalam literasi sains, matematika, bahasa internasional, dan teknologi informasi.",
-    features: [
-      "Penguasaan konsep IPA, Matematika & Bahasa Inggris aplikatif",
-      "Ruang kelas ber-AC dengan multimedia smart board",
-      "Ijazah resmi terakreditasi A untuk kelanjutan SMA/SMK unggulan"
-    ],
-    cardHeader: "Nalar Kritis & Wawasan Global",
-    cardBody: "Pendekatan pembelajaran student-centered yang memacu rasa ingin tahu intelektual tanpa mengorbankan ketundukan pada nilai-nilai wahyu Ilahi."
-  },
-  {
-    tag: "PILAR 03 — KEMANDIRIAN HIDUP NYATA",
-    title: "Vokasi Mandiri & Life Skills",
-    desc: "Membekali siswa dengan keterampilan praktis dunia nyata. Mulai dari dasar-dasar instalasi listrik rumah tangga, perbaikan elektronika, hingga manajemen adab berwirausaha yang syar'i.",
-    features: [
-      "Praktik bengkel instalasi listrik dasar & keselamatan kerja",
-      "Pengenalan dasar kewirausahaan mandiri islami",
-      "Kecakapan problem-solving dan kemandirian fungsional"
-    ],
-    cardHeader: "Lulusan Cakap & Mandiri",
-    cardBody: "Keahlian terapan yang membuat peserta didik terbiasa mandiri, solutif, serta siap berkontribusi langsung bagi keluarga dan masyarakat."
-  },
-  {
-    tag: "PILAR 04 — EKSPLORASI ALAM RAYA",
-    title: "Outing Class & Tadabbur Alam",
-    desc: "Pembelajaran kontekstual di luar kelas untuk mengamati keagungan ciptaan Allah. Memadukan kegiatan outdoor, sains lapangan, kepanduan, dan penguatan ukhuwah islamiyah.",
-    features: [
-      "Eksplorasi ekosistem alam dan penelitian sains mini",
-      "Latihan ketahanan fisik, kepemimpinan & kedisiplinan",
-      "Muhasabah malam dan penguatan ruhiyah di alam terbuka"
-    ],
-    cardHeader: "Belajar dari Alam Nyata",
-    cardBody: "Mentadabburi ayat-ayat kauniyah Allah di alam terbuka untuk menumbuhkan rasa syukur, kerendahan hati, dan kecintaan pada ciptaan-Nya."
-  }
-];
-
-function switchProgramTab(index) {
-  const buttons = document.querySelectorAll('.program-segmented-bar .seg-btn');
-  buttons.forEach((btn, idx) => {
-    if (idx === index) btn.classList.add('active');
-    else btn.classList.remove('active');
-  });
-
-  const data = programData[index];
-  const showcase = document.querySelector('.program-showcase-box');
-  showcase.style.opacity = '0.4';
-  // opacity transition only to keep 3D tilt uninterrupted
-
-  setTimeout(() => {
-    document.getElementById('progPillarTag').textContent = data.tag;
-    document.getElementById('progTitle').textContent = data.title;
-    document.getElementById('progDesc').textContent = data.desc;
-    document.getElementById('progCardHeader').textContent = data.cardHeader;
-    document.getElementById('progCardBody').textContent = data.cardBody;
-
-    const list = document.getElementById('progFeatureList');
-    list.innerHTML = data.features.map(f => `
-      <li>
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-        <span>${f}</span>
-      </li>
-    `).join('');
-
-    showcase.style.opacity = '1';
-    // reset transform preserved for 3D tilt
-  }, 150);
-}
-
-// 4. Cinema Gallery Data & Controls
-const cinemaPhotos = [
-  {
-    src: "foto1.jpg",
-    title: "Gedung Permanen 5 Lantai di Ciater, Serpong",
-    cat: "GEDUNG MILIK SENDIRI"
-  },
-  {
-    src: "foto2.jpg",
-    title: "Tadabbur Alam & Sains Terapan",
-    cat: "OUTING CLASS"
-  },
-  {
-    src: "foto3.jpg",
-    title: "Kelas Full AC & Smart Screen",
-    cat: "RUANG KELAS"
-  }
-];
-let currentCinemaIdx = 0;
-
-function openCinemaGallery(index) {
-  currentCinemaIdx = index;
-  updateCinemaPhoto();
-  const modal = document.getElementById('cinemaGalleryModal');
-  modal.classList.add('open');
-  document.body.style.overflow = 'hidden';
-}
-
-function closeCinemaGallery() {
-  const modal = document.getElementById('cinemaGalleryModal');
-  modal.classList.remove('open');
-  document.body.style.overflow = '';
-}
-
-function updateCinemaPhoto() {
-  const item = cinemaPhotos[currentCinemaIdx];
-  document.getElementById('cinemaImg').src = item.src;
-  document.getElementById('cinemaTitle').textContent = item.title;
-  document.getElementById('cinemaCategory').textContent = item.cat;
-}
-
-function nextCinemaPhoto() {
-  currentCinemaIdx = (currentCinemaIdx + 1) % cinemaPhotos.length;
-  updateCinemaPhoto();
-}
-
-function prevCinemaPhoto() {
-  currentCinemaIdx = (currentCinemaIdx - 1 + cinemaPhotos.length) % cinemaPhotos.length;
-  updateCinemaPhoto();
-}
-
-function closeCinemaOnClickOutside(e) {
-  if (e.target.id === 'cinemaGalleryModal') closeCinemaGallery();
-}
-
-// 5. SPMB Poster Modal
-function openPosterModal() {
-  const modal = document.getElementById('spmbPosterModal');
-  modal.classList.add('open');
-  document.body.style.overflow = 'hidden';
-}
-function closePosterModal() {
-  const modal = document.getElementById('spmbPosterModal');
-  modal.classList.remove('open');
-  document.body.style.overflow = '';
-}
-function closePosterOnClickOutside(e) {
-  if (e.target.id === 'spmbPosterModal') closePosterModal();
-}
-
-// 6. SPMB Direct Modal
-function openSpmbModal() {
-  const modal = document.getElementById('spmbDirectModal');
-  modal.classList.add('open');
-  document.body.style.overflow = 'hidden';
-}
-function closeSpmbModal() {
-  const modal = document.getElementById('spmbDirectModal');
-  modal.classList.remove('open');
-  document.body.style.overflow = '';
-}
-function closeSpmbOnClickOutside(e) {
-  if (e.target.id === 'spmbDirectModal') closeSpmbModal();
-}
-
-// 7. FAQ Accordion Toggle
-function toggleFaq(card) {
-  const isOpen = card.classList.contains('open');
-  document.querySelectorAll('.faq-card').forEach(c => c.classList.remove('open'));
-  if (!isOpen) {
-    card.classList.add('open');
-  }
-}
-
-// 8. Origin Awareness Ripple on All Buttons
-document.querySelectorAll('.btn').forEach(btn => {
-  btn.addEventListener('click', function (e) {
-    const rect = this.getBoundingClientRect();
-    const ripple = document.createElement('span');
-    ripple.className = 'origin-ripple';
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-    const size = Math.max(rect.width, rect.height);
-    ripple.style.width = ripple.style.height = `${size}px`;
-    ripple.style.left = `${x}px`;
-    ripple.style.top = `${y}px`;
-    this.appendChild(ripple);
-    setTimeout(() => ripple.remove(), 600);
-  });
-});
-
-// 9. Interactive 3D Cursor Tilt on Cards (Solid Drawing & Slow-in Slow-out Damping Return)
-document.querySelectorAll('.tilt-card').forEach(card => {
-  let rafId = null;
-
-  card.addEventListener('mouseenter', () => {
-    // Fast yet damped anticipation transition into active tilt tracking
-    card.style.transition = 'transform 0.16s cubic-bezier(0.25, 0.46, 0.45, 0.94), box-shadow 0.3s ease';
-  });
-
-  card.addEventListener('mousemove', e => {
-    const rect = card.getBoundingClientRect();
-    const cx = rect.left + rect.width / 2;
-    const cy = rect.top + rect.height / 2;
-    const dx = e.clientX - cx;
-    const dy = e.clientY - cy;
-
-    // Proportional rotation angles: ~5-6 deg maximum
-    const rx = -(dy / (rect.height / 2)) * 5.5;
-    const ry = (dx / (rect.width / 2)) * 5.5;
-
-    if (rafId) cancelAnimationFrame(rafId);
-    rafId = requestAnimationFrame(() => {
-      // Responsive tracking while moving cursor inside
-      card.style.transition = 'transform 0.1s cubic-bezier(0.25, 0.46, 0.45, 0.94), box-shadow 0.25s ease';
-      card.style.transform = `perspective(1200px) rotateX(${rx.toFixed(2)}deg) rotateY(${ry.toFixed(2)}deg) translateY(-6px) scale3d(1.012, 1.012, 1.012)`;
-    });
-  });
-
-  card.addEventListener('mouseleave', () => {
-    if (rafId) cancelAnimationFrame(rafId);
-    // "Slow in, slow out" & "Follow-through": Silky smooth 0.85s return damping back to level horizon
-    card.style.transition = 'transform 0.85s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.85s cubic-bezier(0.16, 1, 0.3, 1)';
-    card.style.transform = 'perspective(1200px) rotateX(0deg) rotateY(0deg) translateY(0px) scale3d(1, 1, 1)';
-  });
-});
-
-// 10. Scroll 7: Count Up Animation
-function animateCounter(el, target, duration = 1200) {
-  const start = 0;
-  const startTime = performance.now();
-  function update(currentTime) {
-    const elapsed = currentTime - startTime;
-    const progress = Math.min(elapsed / duration, 1);
-    const easeOut = 1 - Math.pow(1 - progress, 3);
-    const current = Math.floor(easeOut * target);
-    el.textContent = current;
-    if (progress < 1) {
-      requestAnimationFrame(update);
-    } else {
-      el.textContent = target;
-    }
-  }
-  requestAnimationFrame(update);
-}
-
-const countObserver = new IntersectionObserver(entries => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting && !entry.target.dataset.counted) {
-      entry.target.dataset.counted = 'true';
-      const target = parseInt(entry.target.dataset.target, 10);
-      animateCounter(entry.target, target);
-    }
-  });
-}, { threshold: 0.5 });
-
-document.querySelectorAll('.counter-num[data-target]').forEach(el => countObserver.observe(el));
-
-// 11. Scroll 2: Blur In & Scroll 8: Mask Reveal Observer
-const scrollRevealObserver = new IntersectionObserver(entries => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      entry.target.classList.add('revealed');
-      scrollRevealObserver.unobserve(entry.target);
-    }
-  });
-}, { threshold: 0.15 });
-
-document.querySelectorAll('.scroll-blur-in, .mask-reveal').forEach(el => scrollRevealObserver.observe(el));
-
-// 12. Scroll 1: Zoom-Out Hero Parallax Background
-const heroBg = document.querySelector('.hero-parallax-bg');
-if (heroBg) {
-  window.addEventListener('scroll', () => {
-    const scrolled = window.scrollY;
-    const scale = 1.10 - (scrolled * 0.00015);
-    heroBg.style.transform = `scale(${Math.max(1.0, scale)})`;
-  }, { passive: true });
-}
-
-// ===== SCROLL EFFECTS ADD-ON =====
-// A. Progress bar + hero fade + kedalaman tumpukan kartu (satu rAF)
+/* SMP Al Haudh — interaksi halaman (v8)
+   Catatan performa:
+   - Animasi scroll memakai GSAP + ScrollTrigger (file lokal di /vendor).
+   - Efek scroll ringan lain dijalankan dalam SATU requestAnimationFrame: baca layout dulu, baru tulis
+     (menghindari "layout thrashing").
+   - Efek tilt 3D hanya untuk perangkat dengan mouse.
+   - Preloader tidak lagi menahan 2 detik: terangkat begitu halaman siap (maks. 1,5 dtk), dan hanya sekali per sesi.
+*/
 (function () {
-  const bar = document.getElementById('scrollProgress');
-  const hero = document.querySelector('.hero');
-  const tcards = [...document.querySelectorAll('.timeline-card')];
-  let ticking = false;
-  function frame() {
-    ticking = false;
-    const y = window.scrollY, h = document.documentElement.scrollHeight - innerHeight;
-    bar.style.transform = 'scaleX(' + (h > 0 ? Math.min(1, y / h) : 0) + ')';
-    if (hero) hero.style.setProperty('--hp', Math.min(1, Math.max(0, y / (hero.offsetHeight * 0.8))).toFixed(3));
-    tcards.forEach((c, i) => {
-      const n = tcards[i + 1];
-      if (!n) return c.style.setProperty('--k', 0);
-      const cr = c.getBoundingClientRect(), nr = n.getBoundingClientRect();
-      const k = Math.min(1, Math.max(0, (cr.bottom - nr.top) / Math.max(1, cr.height - 20)));
-      c.style.setProperty('--k', k.toFixed(3));
-    });
-  }
-  function req() { if (!ticking) { ticking = true; requestAnimationFrame(frame); } }
-  addEventListener('scroll', req, { passive: true });
-  addEventListener('resize', req);
-  frame();
-})();
+  'use strict';
 
-// B. Sticky stacking sections + scrollspy + anchor halus
-(function () {
-  const ids = ['profil', 'program', 'pembiasaan', 'fasilitas', 'galeri', 'lokasi', 'spmb', 'faq'];
-  const sticky = ['profil', 'program', 'fasilitas', 'galeri', 'lokasi', 'spmb', 'faq']; // pembiasaan sudah punya tumpukan kartu sendiri
-  const secs = ids.map(id => document.getElementById(id)).filter(Boolean);
-  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const anchors = new Map();
+  const $ = (s, r) => (r || document).querySelector(s);
+  const $$ = (s, r) => Array.from((r || document).querySelectorAll(s));
+  const root = document.documentElement;
+  const body = document.body;
+  const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const finePointer = matchMedia('(hover: hover) and (pointer: fine)').matches;
+  const hasGSAP = !!(window.gsap && window.ScrollTrigger);
+  let curtainShown = false, curtainLifted = false, onCurtainLift = null, onCurtainDone = null;
+  const HERO_CIRCLE_OPACITY = 0.14; // sama dengan opacity .hero-circle di CSS
 
-  secs.forEach((s, i) => {
-    s.style.setProperty('--z', 11 + i);
-    if (reduce) return;
-    if (sticky.includes(s.id)) {
-      s.classList.add('stack-sec');
-      // penanda nol-tinggi di posisi normal section (dipakai untuk anchor & scrollspy)
-      const a = document.createElement('span');
-      a.className = 'stack-anchor';
-      s.parentNode.insertBefore(a, s);
-      anchors.set(s.id, a);
+  /* ------------------------------------------------------------------
+     0. Welcoming animation (preloader) — sederhana & linear
+        Bulatan muncul → bergeser lurus ke samping sambil "AL HAUDH" terbuka →
+        tulisan & latar memudar, bulatan terbang ke posisinya di hero (.hero-circle)
+        lalu terus melayang di sana. Bisa dilewati: klik, tombol keyboard, scroll, geser.
+     ------------------------------------------------------------------ */
+  (function preloader() {
+    const curtain = $('#app-preloader');
+    const heroCircle = $('.hero-circle');
+    const release = () => body.classList.remove('preloader-active');
+    if (!curtain || root.classList.contains('no-preloader')) {
+      if (curtain) curtain.remove();
+      release();
+      return;
+    }
+    try { sessionStorage.setItem('ah-seen', '1'); } catch (e) { }
+    curtainShown = true;
+    // JavaScript berjalan → pengaman CSS (auto-hilang 6 dtk) tidak diperlukan
+    curtain.style.animation = 'none';
+    body.style.animation = 'none';
+
+    let heroStarted = false, finished = false;
+    function startHero() {        // mainkan intro konten hero
+      if (heroStarted) return;
+      heroStarted = true;
+      curtainLifted = true;
+      if (onCurtainLift) onCurtainLift();
+    }
+    function finish() {
+      if (finished) return;
+      finished = true;
+      startHero();
+      release();
+      if (heroCircle) heroCircle.style.opacity = ''; // bulatan hero mengambil alih
+      curtain.remove();
+      if (onCurtainDone) onCurtainDone();
+      ['keydown', 'wheel', 'touchmove'].forEach(t => removeEventListener(t, skip));
+    }
+    setTimeout(finish, 6000); // batas atas, apa pun yang terjadi
+
+    let skip = () => { };
+    if (hasGSAP) {
+      const gsap = window.gsap;
+      const dot = curtain.querySelector('.pl-dot');
+      const text = curtain.querySelector('.pl-text');
+      const bg = curtain.querySelector('.pl-bg');
+
+      // Bulatan intro dibuat seukuran bulatan hero, lalu diperkecil → tetap tajam saat membesar
+      if (heroCircle) {
+        heroCircle.style.animation = 'none';
+        heroCircle.style.opacity = '0';
+      }
+      const S = heroCircle ? heroCircle.offsetWidth : 300;
+      gsap.set(dot, { width: S, height: S, marginLeft: -S / 2, marginTop: -S / 2 });
+      gsap.set(text, { xPercent: -50, yPercent: -50, x: 0, y: 0 }); // pusatkan lewat GSAP (lihat catatan di CSS)
+
+      let d = 0, gap = 0, W = 0, target = { x: 0, y: 0 };
+      const measure = () => {
+        const fs = parseFloat(getComputedStyle(text).fontSize);
+        d = fs * 0.72;      // diameter bulatan ≈ tinggi huruf kapital
+        gap = fs * 0.34;
+        W = text.offsetWidth;
+      };
+      const measureTarget = () => {
+        if (!heroCircle) { target = { x: 0, y: 0 }; return; }
+        const r = heroCircle.getBoundingClientRect();
+        target = { x: r.left + r.width / 2 - innerWidth / 2, y: r.top + r.height / 2 - innerHeight / 2 };
+      };
+
+      const ease = 'power3.inOut';
+      const tl = gsap.timeline({ paused: true, onComplete: finish });
+      tl
+        .call(measure, null, 0)
+        // 1) bulatan muncul di tengah
+        .fromTo(dot, { scale: 0 }, { scale: () => d / S, duration: 0.6, ease: 'power2.out', immediateRender: false }, 0.05)
+        // 2) bergeser lurus ke kiri, "AL HAUDH" keluar dari sisi kanan bulatan.
+        //    Tepi kiri tulisan selalu menempel di kanan bulatan (gerak & easing sama),
+        //    sementara bagian yang terlihat melebar ke kanan → grup berakhir tepat di tengah.
+        .addLabel('slide', 0.8)
+        .to(dot, { x: () => -(gap + W) / 2, duration: 0.95, ease }, 'slide')
+        .fromTo(text,
+          { x: () => d / 2 + gap + W / 2, clipPath: 'inset(0% 100% 0% 0%)' },
+          { x: () => (d + gap) / 2, clipPath: 'inset(0% 0% 0% 0%)', duration: 0.95, ease, immediateRender: false },
+          'slide')
+        // 3) keluar: tulisan & latar memudar, bulatan pindah ke hero
+        .addLabel('exit', 2.35)
+        .call(measureTarget, null, 'exit')
+        .to(text, { opacity: 0, duration: 0.35, ease: 'power2.in' }, 'exit')
+        .call(startHero, null, 'exit+=0.2')
+        .to(bg, { opacity: 0, duration: 0.85, ease: 'power2.inOut' }, 'exit+=0.15')
+        .to(dot, {
+          x: () => target.x, y: () => target.y, scale: 1, opacity: HERO_CIRCLE_OPACITY,
+          duration: 1.15, ease
+        }, 'exit');
+
+      // Mulai setelah font siap (maks. 0,7 dtk) agar lebar tulisan terukur tepat
+      const fontsReady = document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve();
+      Promise.race([fontsReady, new Promise(r => setTimeout(r, 700))]).then(() => { if (!finished) tl.play(); });
+
+      // Lewati: lompat tepat sebelum bagian keluar, lalu keluar sedikit lebih cepat
+      skip = () => {
+        if (finished || tl.time() >= tl.labels.exit) return;
+        measure();
+        tl.seek(tl.labels.exit - 0.01).timeScale(1.5).play();
+      };
     } else {
-      s.classList.add('stack-rel');
+      // Tanpa GSAP: tulisan tampil, lalu tirai memudar (bulatan hero tetap dengan animasi CSS)
+      curtain.classList.add('pl-static');
+      let started = false;
+      const out = () => {
+        if (started) return;
+        started = true;
+        curtain.classList.add('lift-up');
+        startHero();
+        setTimeout(finish, 650);
+      };
+      setTimeout(out, 1300);
+      skip = out;
+    }
+    curtain.addEventListener('click', () => skip());
+    addEventListener('keydown', skip);
+    addEventListener('wheel', skip, { passive: true });
+    addEventListener('touchmove', skip, { passive: true });
+  })();
+
+  /* ------------------------------------------------------------------
+     1. Modal (dialog) generik: fokus terkunci, Esc, klik latar
+     ------------------------------------------------------------------ */
+  const FOCUSABLE = 'a[href],button:not([disabled]),input,select,textarea,[tabindex]:not([tabindex="-1"])';
+  let openModalEl = null;
+  let lastFocus = null;
+
+  function lockScroll(on) { body.style.overflow = on ? 'hidden' : ''; }
+
+  function openModal(id, trigger) {
+    const m = document.getElementById(id);
+    if (!m) return;
+    if (openModalEl && openModalEl !== m) closeModal(false);
+    if (!openModalEl) lastFocus = trigger || document.activeElement;
+    m.hidden = false;
+    m.classList.add('open');
+    openModalEl = m;
+    lockScroll(true);
+    const first = $('.cinema-close-btn', m) || $(FOCUSABLE, m);
+    if (first) first.focus({ preventScroll: true });
+  }
+
+  function closeModal(restore = true) {
+    if (!openModalEl) return;
+    openModalEl.classList.remove('open');
+    openModalEl.hidden = true;
+    openModalEl = null;
+    lockScroll(false);
+    if (restore && lastFocus && lastFocus.focus) lastFocus.focus({ preventScroll: true });
+  }
+
+  document.addEventListener('click', e => {
+    const opener = e.target.closest('[data-modal-open]');
+    if (opener) {
+      e.preventDefault();
+      if (opener.hasAttribute('data-menu-close')) closeMenu(false);
+      openModal(opener.getAttribute('data-modal-open'), opener);
+      return;
+    }
+    if (e.target.closest('[data-modal-close]')) { closeModal(); return; }
+    if (openModalEl && e.target === openModalEl) closeModal();
+  });
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') {
+      if (openModalEl) closeModal();
+      else if (menu && menu.classList.contains('open')) closeMenu();
+      return;
+    }
+    if (e.key === 'Tab' && openModalEl) {
+      const f = $$(FOCUSABLE, openModalEl).filter(el => el.offsetParent !== null);
+      if (!f.length) return;
+      const first = f[0], last = f[f.length - 1];
+      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+    }
+    if (openModalEl && openModalEl.id === 'cinemaGalleryModal') {
+      if (e.key === 'ArrowRight') stepCinema(1);
+      if (e.key === 'ArrowLeft') stepCinema(-1);
     }
   });
 
-  const links = [...document.querySelectorAll('nav .links a[href^="#"]')];
-  const topOf = s => (anchors.get(s.id) || s).getBoundingClientRect().top;
-
-  // Section lebih tinggi dari layar: menempel saat BAGIAN BAWAHNYA mencapai dasar layar
-  function setTops() {
-    secs.forEach(s => {
-      if (s.classList.contains('stack-sec')) s.style.top = Math.min(0, innerHeight - s.offsetHeight) + 'px';
-    });
+  /* ------------------------------------------------------------------
+     2. Menu HP
+     ------------------------------------------------------------------ */
+  const menu = $('#mobileMenu');
+  const menuBtn = $('#menuToggle');
+  function openMenu() {
+    menu.classList.add('open');
+    menuBtn.setAttribute('aria-expanded', 'true');
+    const firstLink = $('a', menu);
+    if (firstLink) setTimeout(() => firstLink.focus({ preventScroll: true }), 50);
+  }
+  function closeMenu(restore = true) {
+    if (!menu.classList.contains('open')) return;
+    menu.classList.remove('open');
+    menuBtn.setAttribute('aria-expanded', 'false');
+    if (restore) menuBtn.focus({ preventScroll: true });
+  }
+  if (menu && menuBtn) {
+    menuBtn.addEventListener('click', () => (menu.classList.contains('open') ? closeMenu() : openMenu()));
+    $$('[data-menu-close]', menu).forEach(b => b.addEventListener('click', () => closeMenu(!b.hasAttribute('data-modal-open'))));
+    $$('.mobile-menu-links a', menu).forEach(a => a.addEventListener('click', () => closeMenu(false)));
   }
 
-  function update() {
-    const vh = innerHeight; let cur = null;
-    secs.forEach((s, i) => {
-      if (topOf(s) <= vh * 0.45) cur = s.id;
-      if (s.classList.contains('stack-sec')) {
-        const n = secs[i + 1] || document.querySelector('footer');
-        const k = n ? Math.min(1, Math.max(0, 1 - n.getBoundingClientRect().top / vh)) : 0;
-        s.style.setProperty('--cover', k.toFixed(3));
+  /* ------------------------------------------------------------------
+     3. Program tabs
+     ------------------------------------------------------------------ */
+  const programData = [
+    {
+      tag: "PILAR 01 — TARGET 5 JUZ MUTQIN",
+      title: "Tahfizhul Qur'an Bersanad Talaqqi",
+      desc: "Program hafalan Al-Qur'an intensif dengan target kelulusan 5 juz mutqin. Menggunakan metode talaqqi tajwid bersanad bersama asatidz hafidz, dilengkapi evaluasi harian dan ujian tasmi' resmi di hadapan orang tua.",
+      features: [
+        "Bimbingan talaqqi makharijul huruf & tajwid matan Jazariyah",
+        "Halaqah pagi rutin sebelum KBM akademik dimulai",
+        "Pemberian syahadah tahfizh resmi 3 & 5 juz untuk bekal studi lanjut"
+      ],
+      cardHeader: "Halaqah Eksklusif & Terbimbing",
+      cardBody: "Setiap halaqah dibimbing oleh ustadz yang berdedikasi tinggi dengan rasio guru-siswa yang ideal, memastikan ketelitian bacaan dan kekuatan hafalan setiap murid."
+    },
+    {
+      tag: "PILAR 02 — KURIKULUM NASIONAL · AKREDITASI A",
+      title: "Kurikulum Terpadu & Nalar Akademik",
+      desc: "Memadukan kurikulum nasional Kemendikdasmen dengan wawasan keislaman secara integral. Menyiapkan peserta didik unggul dalam literasi sains, matematika, bahasa internasional, dan teknologi informasi.",
+      features: [
+        "Penguasaan konsep IPA, Matematika & Bahasa Inggris aplikatif",
+        "Ruang kelas ber-AC dengan multimedia smart board",
+        "Ijazah resmi terakreditasi A untuk kelanjutan SMA/SMK unggulan"
+      ],
+      cardHeader: "Nalar Kritis & Wawasan Global",
+      cardBody: "Pendekatan pembelajaran student-centered yang memacu rasa ingin tahu intelektual tanpa mengorbankan ketundukan pada nilai-nilai wahyu Ilahi."
+    },
+    {
+      tag: "PILAR 03 — KEMANDIRIAN HIDUP NYATA",
+      title: "Vokasi Mandiri & Life Skills",
+      desc: "Membekali siswa dengan keterampilan praktis dunia nyata. Mulai dari dasar-dasar instalasi listrik rumah tangga, perbaikan elektronika, hingga manajemen adab berwirausaha yang syar'i.",
+      features: [
+        "Praktik bengkel instalasi listrik dasar & keselamatan kerja",
+        "Pengenalan dasar kewirausahaan mandiri islami",
+        "Kecakapan problem-solving dan kemandirian fungsional"
+      ],
+      cardHeader: "Lulusan Cakap & Mandiri",
+      cardBody: "Keahlian terapan yang membuat peserta didik terbiasa mandiri, solutif, serta siap berkontribusi langsung bagi keluarga dan masyarakat."
+    },
+    {
+      tag: "PILAR 04 — EKSPLORASI ALAM RAYA",
+      title: "Outing Class & Tadabbur Alam",
+      desc: "Pembelajaran kontekstual di luar kelas untuk mengamati keagungan ciptaan Allah. Memadukan kegiatan outdoor, sains lapangan, kepanduan, dan penguatan ukhuwah islamiyah.",
+      features: [
+        "Eksplorasi ekosistem alam dan penelitian sains mini",
+        "Latihan ketahanan fisik, kepemimpinan & kedisiplinan",
+        "Muhasabah malam dan penguatan ruhiyah di alam terbuka"
+      ],
+      cardHeader: "Belajar dari Alam Nyata",
+      cardBody: "Mentadabburi ayat-ayat kauniyah Allah di alam terbuka untuk menumbuhkan rasa syukur, kerendahan hati, dan kecintaan pada ciptaan-Nya."
+    }
+  ];
+
+  const tabs = $$('.program-segmented-bar .seg-btn');
+  const showcase = $('.program-showcase-box');
+  function switchProgramTab(index, focus) {
+    const data = programData[index];
+    if (!data || !showcase) return;
+    tabs.forEach((btn, i) => {
+      const on = i === index;
+      btn.classList.toggle('active', on);
+      btn.setAttribute('aria-selected', on ? 'true' : 'false');
+      btn.tabIndex = on ? 0 : -1;
+    });
+    if (focus) tabs[index].focus();
+    showcase.setAttribute('aria-labelledby', tabs[index].id);
+    const fill = () => {
+      $('#progPillarTag').textContent = data.tag;
+      $('#progTitle').textContent = data.title;
+      $('#progDesc').textContent = data.desc;
+      $('#progCardHeader').textContent = data.cardHeader;
+      $('#progCardBody').textContent = data.cardBody;
+      const list = $('#progFeatureList');
+      list.textContent = '';
+      data.features.forEach(f => {
+        const li = document.createElement('li');
+        li.innerHTML = '<svg aria-hidden="true"><use href="#i-check"/></svg><span></span>';
+        li.lastChild.textContent = f;
+        list.appendChild(li);
+      });
+    };
+    if (hasGSAP && !reduceMotion) {
+      const parts = ['#progPillarTag', '#progTitle', '#progDesc', '#progFeatureList', '.prog-actions', '.program-preview-card'];
+      window.gsap.to(parts, {
+        opacity: 0, y: -10, duration: 0.18, stagger: 0.02, ease: 'power2.in', overwrite: true,
+        onComplete: () => {
+          fill();
+          window.gsap.fromTo(parts, { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.5, stagger: 0.05, ease: 'power3.out', clearProps: 'transform' });
+        }
+      });
+    } else {
+      fill();
+    }
+  }
+  tabs.forEach((btn, i) => {
+    btn.addEventListener('click', () => switchProgramTab(i));
+    btn.addEventListener('keydown', e => {
+      if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
+        e.preventDefault();
+        const n = (i + (e.key === 'ArrowRight' ? 1 : -1) + tabs.length) % tabs.length;
+        switchProgramTab(n, true);
       }
     });
-    if (!window.__navLock) links.forEach(a => a.classList.toggle('active', a.getAttribute('href').slice(1) === cur));
-  }
-
-  let t = false;
-  function req() { if (!t) { t = true; requestAnimationFrame(() => { t = false; update(); }); } }
-  function relayout() { setTops(); req(); }
-
-  addEventListener('scroll', req, { passive: true });
-  addEventListener('resize', relayout);
-  addEventListener('load', relayout);
-  if ('ResizeObserver' in window) { const ro = new ResizeObserver(relayout); secs.forEach(s => ro.observe(s)); }
-  relayout();
-
-  // Klik menu: scroll ke posisi normal section (bukan posisi menempelnya)
-  document.querySelectorAll('a[href^="#"]').forEach(a => a.addEventListener('click', e => {
-    const id = a.getAttribute('href').slice(1), an = anchors.get(id);
-    if (!an) return;
-    e.preventDefault();
-    const pad = parseFloat(getComputedStyle(document.documentElement).scrollPaddingTop) || 0;
-    scrollTo({ top: an.getBoundingClientRect().top + scrollY - pad, behavior: 'smooth' });
-    try { history.replaceState(null, '', '#' + id); } catch (_) {}
-  }));
-})();
-
-// C. Staggered reveal untuk kartu
-(function () {
-  const sel = '.stats-card,.visi-card-hero,.misi-tile,.facility-card,.lokasi-card,.faq-card,.spmb-price-card,.spmb-info-panel,.spmb-poster-box';
-  const els = [...document.querySelectorAll(sel)];
-  const canIO = 'IntersectionObserver' in window;
-  els.forEach(el => {
-    const sibs = [...el.parentElement.children].filter(c => c.matches(sel));
-    el.style.setProperty('--d', (Math.max(0, sibs.indexOf(el)) % 4) * 0.09 + 's');
-    el.classList.add('rv-card');
-    if (!canIO) el.classList.add('in');
   });
-  if (!canIO) return;
-  const io = new IntersectionObserver(es => es.forEach(e => {
-    if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
-  }), { threshold: 0.12, rootMargin: '0px 0px -6% 0px' });
-  els.forEach(el => io.observe(el));
-})();
 
-// Keyboard navigation for modals (Escape key)
-window.addEventListener('keydown', e => {
-  if (e.key === 'Escape') {
-    closeCinemaGallery();
-    closePosterModal();
-    closeSpmbModal();
-    closeMobileMenu();
-  }
-});
-
-// ===== GLASS BOTTOM NAV: bubble + cekungan bar yang bergeser (spring) =====
-(function () {
-  const ITEMS = [
-    { id: 'beranda', label: 'Beranda', cover: ['beranda'], ic: '<path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/>' },
-    { id: 'profil', label: 'Profil', cover: ['profil'], ic: '<circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/>' },
-    { id: 'program', label: 'Program', cover: ['program', 'pembiasaan'], ic: '<path d="M2 5h6a4 4 0 0 1 4 4v12a3 3 0 0 0-3-3H2z"/><path d="M22 5h-6a4 4 0 0 0-4 4v12a3 3 0 0 1 3-3h7z"/>' },
-    { id: 'fasilitas', label: 'Fasilitas', cover: ['fasilitas', 'galeri', 'lokasi'], ic: '<rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 7h2M13 7h2M9 11h2M13 11h2M10 21v-4h4v4"/>' },
-    { id: 'spmb', label: 'Daftar SPMB', cover: ['spmb', 'faq'], ic: '<circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/>' }
-  ];
-  const nav = document.getElementById('gnav'); if (!nav) return;
-  const T = 26, H = 60, R = 30, HW = 34, DEP = 26, BD = 46; // geometri bar & cekungan
-  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const so = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" ';
-
-  nav.innerHTML =
-    '<svg class="gnav-fx gnav-shadow" aria-hidden="true"><path id="gnShadow"/></svg>' +
-    '<div class="gnav-glass" id="gnGlass"></div>' +
-    '<svg class="gnav-fx" aria-hidden="true"><defs><linearGradient id="gnGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".75"/><stop offset="1" stop-color="#fff" stop-opacity=".2"/></linearGradient></defs><path id="gnEdge" fill="none" stroke="url(#gnGrad)" stroke-width="1.5"/></svg>' +
-    '<div class="gnav-items" id="gnItems">' + ITEMS.map((it, i) =>
-      '<button type="button" class="gnav-btn" data-i="' + i + '" aria-label="' + it.label + '" title="' + it.label + '">' + so + 'class="ic">' + it.ic + '</svg></button>').join('') + '</div>' +
-    '<div class="gnav-bubble" id="gnBubble" aria-hidden="true">' + ITEMS.map((it, i) => so + 'class="bi" data-i="' + i + '">' + it.ic + '</svg>').join('') + '</div>';
-
-  const glass = document.getElementById('gnGlass'), edgeP = document.getElementById('gnEdge'), shP = document.getElementById('gnShadow');
-  const itemsEl = document.getElementById('gnItems'), bubble = document.getElementById('gnBubble');
-  const btns = [...itemsEl.children], bis = [...bubble.children], fx = [...nav.querySelectorAll('.gnav-fx')];
-  let W = 0, centers = [], active = 0, x = 0, v = 0, tx = 0, raf = 0, last = 0;
-
-  function barPath(cx) {
-    cx = Math.max(R + HW, Math.min(W - R - HW, cx));
-    const sx = cx - HW, ex = cx + HW, by = T + DEP;
-    return 'M' + R + ',' + T + 'H' + sx + 'C' + (sx + 18) + ',' + T + ' ' + (cx - 26) + ',' + by + ' ' + cx + ',' + by +
-      'C' + (cx + 26) + ',' + by + ' ' + (ex - 18) + ',' + T + ' ' + ex + ',' + T + 'H' + (W - R) +
-      'A' + R + ',' + R + ' 0 0 1 ' + (W - R) + ',' + (T + H) + 'H' + R + 'A' + R + ',' + R + ' 0 0 1 ' + R + ',' + T + 'Z';
-  }
-  function draw() {
-    if (!W) return;
-    const d = barPath(x);
-    glass.style.clipPath = "path('" + d + "')";
-    edgeP.setAttribute('d', d); shP.setAttribute('d', d);
-    const st = Math.min(0.16, Math.abs(v) / 3600); // meregang saat bergerak cepat
-    bubble.style.transform = 'translate3d(' + (x - BD / 2) + 'px,0,0) scale(' + (1 + st) + ',' + (1 - st * 0.7) + ')';
-  }
-  function tick(t) {
-    const dt = Math.min(0.033, (t - last) / 1000 || 0.016); last = t;
-    v += (190 * (tx - x) - 21 * v) * dt; x += v * dt; draw();
-    if (Math.abs(tx - x) < 0.15 && Math.abs(v) < 2) { x = tx; v = 0; draw(); raf = 0; return; }
-    raf = requestAnimationFrame(tick);
-  }
-  function go() {
-    if (reduce) { x = tx; v = 0; draw(); return; }
-    if (!raf && W) { last = performance.now(); raf = requestAnimationFrame(tick); }
-  }
-  function layout() {
-    W = nav.clientWidth; if (!W) return;
-    const pad = Math.max(12, (R + HW + 2 - W / 10) / 0.8); // pusat ikon pertama cukup jauh dari ujung bar
-    itemsEl.style.setProperty('--pad', pad + 'px');
-    centers = btns.map(b => b.offsetLeft + b.offsetWidth / 2);
-    fx.forEach(s => { s.setAttribute('viewBox', '0 0 ' + W + ' ' + (T + H)); });
-    x = tx = centers[active]; v = 0; draw();
-  }
-  function setActive(i) {
-    if (i === active) return;
-    active = i;
-    btns.forEach((b, j) => { b.classList.toggle('is-active', j === i); j === i ? b.setAttribute('aria-current', 'true') : b.removeAttribute('aria-current'); });
-    bis.forEach((el, j) => el.classList.toggle('on', j === i));
-    tx = centers[i]; go();
-  }
-
-  // --- sinkron dengan scroll ---
-  const secIds = ['beranda', 'profil', 'program', 'pembiasaan', 'fasilitas', 'galeri', 'lokasi', 'spmb', 'faq'];
-  const refOf = id => { const el = document.getElementById(id); if (!el) return null; const p = el.previousElementSibling; return (p && p.classList.contains('stack-anchor')) ? p : el; };
-  let locked = false, lt = 0, pend = false;
-  function sync() {
-    if (locked) return;
-    let cur = 'beranda';
-    secIds.forEach(id => { const r = refOf(id); if (r && r.getBoundingClientRect().top <= innerHeight * 0.5) cur = id; });
-    const i = ITEMS.findIndex(it => it.cover.includes(cur));
-    if (i >= 0) setActive(i);
-  }
-  addEventListener('scroll', () => {
-    if (locked) { clearTimeout(lt); lt = setTimeout(() => { locked = false; sync(); }, 140); }
-    if (!pend) { pend = true; requestAnimationFrame(() => { pend = false; sync(); }); }
-  }, { passive: true });
-
-  // --- klik: bubble langsung pindah, halaman menyusul ---
-  btns.forEach((b, i) => b.addEventListener('click', () => {
-    const it = ITEMS[i];
-    locked = true; clearTimeout(lt); lt = setTimeout(() => { locked = false; sync(); }, 900);
-    setActive(i);
-    if (it.id === 'beranda') return scrollTo({ top: 0, behavior: 'smooth' });
-    const r = refOf(it.id); if (!r) return;
-    const pad = parseFloat(getComputedStyle(document.documentElement).scrollPaddingTop) || 0;
-    scrollTo({ top: r.getBoundingClientRect().top + scrollY - pad, behavior: 'smooth' });
+  /* ------------------------------------------------------------------
+     4. Galeri layar penuh (data diambil dari HTML, satu sumber)
+     ------------------------------------------------------------------ */
+  const galleryItems = $$('#galeriGrid .galeri-item');
+  const cinemaPhotos = galleryItems.map(el => ({
+    src: el.dataset.full,
+    title: el.dataset.title,
+    cat: el.dataset.cat,
+    alt: (el.querySelector('img') || {}).alt || ''
   }));
+  let cinemaIdx = 0;
+  const cImg = $('#cinemaImg');
 
-  btns[0].classList.add('is-active'); btns[0].setAttribute('aria-current', 'true'); bis[0].classList.add('on');
-  layout(); sync(); x = tx = centers[active]; v = 0; draw();
-  if ('ResizeObserver' in window) new ResizeObserver(layout).observe(nav); else addEventListener('resize', layout);
-  addEventListener('load', layout);
-})();
-
-// ===== NAVBAR DESKTOP: cekungan + bubble yang meluncur ke menu aktif =====
-(function () {
-  const nav = document.getElementById('navbar'), box = nav && nav.querySelector('.links'); if (!box) return;
-  const mq = matchMedia('(min-width:960px)'), reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  nav.insertAdjacentHTML('afterbegin',
-    '<svg class="nb-fx nb-shadow" aria-hidden="true"><path/></svg><div class="nb-glass"></div>' +
-    '<svg class="nb-fx" aria-hidden="true"><defs><linearGradient id="nbGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".8"/><stop offset="1" stop-color="#fff" stop-opacity=".22"/></linearGradient></defs><path fill="none" stroke="url(#nbGrad)" stroke-width="1.5"/></svg>');
-  const bubble = document.createElement('div'); bubble.className = 'nb-bubble'; bubble.setAttribute('aria-hidden', 'true');
-  const txt = document.createElement('span'); bubble.appendChild(txt); nav.appendChild(bubble);
-  const [shP, edP] = nav.querySelectorAll('.nb-fx path'), glass = nav.querySelector('.nb-glass'), fxs = [...nav.querySelectorAll('.nb-fx')];
-  const BH = 34, DEP = 19, K = ['x', 'w', 'd'];
-  const S = { x: 0, w: 90, d: 0 }, V = { x: 0, w: 0, d: 0 }, T = { x: 0, w: 90, d: 0 };
-  const EPS = { x: 0.15, w: 0.15, d: 0.003 }, VEPS = { x: 2, w: 2, d: 0.05 };
-  let W = 0, H = 0, raf = 0, last = 0, lk = 0;
-
-  function path() {
-    const R = H / 2, cx = S.x, flat = Math.max(0, S.w / 2 - 6), hw = flat + 30, by = H - DEP * Math.max(0, S.d);
-    const sx = cx - hw, ex = cx + hw;
-    return 'M' + R + ',0H' + (W - R) + 'A' + R + ',' + R + ' 0 0 1 ' + (W - R) + ',' + H + 'H' + ex +
-      'C' + (ex - 16) + ',' + H + ' ' + (cx + flat + 14) + ',' + by + ' ' + (cx + flat) + ',' + by + 'H' + (cx - flat) +
-      'C' + (cx - flat - 14) + ',' + by + ' ' + (sx + 16) + ',' + H + ' ' + sx + ',' + H + 'H' + R +
-      'A' + R + ',' + R + ' 0 0 1 ' + R + ',0Z';
+  function renderCinema() {
+    const item = cinemaPhotos[cinemaIdx];
+    if (!item || !cImg) return;
+    cImg.src = item.src;
+    cImg.alt = item.alt;
+    $('#cinemaTitle').textContent = item.title;
+    $('#cinemaCategory').textContent = item.cat;
+    $('#cinemaCount').textContent = (cinemaIdx + 1) + ' / ' + cinemaPhotos.length;
+    // pra-muat foto berikutnya agar navigasi terasa instan
+    const next = cinemaPhotos[(cinemaIdx + 1) % cinemaPhotos.length];
+    if (next) { const pre = new Image(); pre.src = next.src; }
   }
-  function draw() {
-    const p = path(); glass.style.clipPath = "path('" + p + "')"; edP.setAttribute('d', p); shP.setAttribute('d', p);
-    const st = Math.min(0.14, Math.abs(V.x) / 4500), sc = Math.max(0, S.d);
-    bubble.style.opacity = Math.min(1, sc * 1.4); bubble.style.width = S.w + 'px';
-    bubble.style.transform = 'translate3d(' + (S.x - S.w / 2) + 'px,' + (H - BH / 2 + 2) + 'px,0) scale(' + (sc * (1 + st)) + ',' + (sc * (1 - st * 0.6)) + ')';
+  function stepCinema(d) {
+    cinemaIdx = (cinemaIdx + d + cinemaPhotos.length) % cinemaPhotos.length;
+    renderCinema();
   }
-  function tick(t) {
-    const dt = Math.min(0.033, (t - last) / 1000 || 0.016); last = t; let moving = false;
-    K.forEach(k => {
-      const kk = k === 'd' ? 220 : 190, cc = k === 'd' ? 24 : 21;
-      V[k] += (kk * (T[k] - S[k]) - cc * V[k]) * dt; S[k] += V[k] * dt;
-      if (Math.abs(T[k] - S[k]) > EPS[k] || Math.abs(V[k]) > VEPS[k]) moving = true;
+  galleryItems.forEach((el, i) => el.addEventListener('click', () => {
+    cinemaIdx = i;
+    renderCinema();
+    openModal('cinemaGalleryModal', el);
+  }));
+  const cPrev = $('#cinemaPrev'), cNext = $('#cinemaNext');
+  if (cPrev) cPrev.addEventListener('click', () => stepCinema(-1));
+  if (cNext) cNext.addEventListener('click', () => stepCinema(1));
+
+  // geser (swipe) di HP
+  (function swipe() {
+    const stage = $('.cinema-stage');
+    if (!stage) return;
+    let x0 = null;
+    stage.addEventListener('touchstart', e => { x0 = e.touches[0].clientX; }, { passive: true });
+    stage.addEventListener('touchend', e => {
+      if (x0 === null) return;
+      const dx = e.changedTouches[0].clientX - x0;
+      if (Math.abs(dx) > 40) stepCinema(dx < 0 ? 1 : -1);
+      x0 = null;
+    }, { passive: true });
+  })();
+
+  /* ------------------------------------------------------------------
+     5. FAQ accordion
+     ------------------------------------------------------------------ */
+  $$('.faq-question').forEach(btn => btn.addEventListener('click', () => {
+    const card = btn.closest('.faq-card');
+    const wasOpen = card.classList.contains('open');
+    $$('.faq-card.open').forEach(c => {
+      c.classList.remove('open');
+      $('.faq-question', c).setAttribute('aria-expanded', 'false');
     });
-    if (!moving) { K.forEach(k => { S[k] = T[k]; V[k] = 0; }); draw(); raf = 0; return; }
-    draw(); raf = requestAnimationFrame(tick);
-  }
-  function measure(snap) {
-    W = nav.offsetWidth; H = nav.offsetHeight; if (!W || !mq.matches) return;
-    fxs.forEach(s => s.setAttribute('viewBox', '0 0 ' + W + ' ' + H));
-    const a = box.querySelector('a.active');
-    if (a) {
-      const nr = nav.getBoundingClientRect(), r = a.getBoundingClientRect();
-      T.x = r.left - nr.left + r.width / 2; T.w = Math.max(70, r.width + 16); T.d = 1;
-      txt.textContent = a.textContent.trim(); nav.classList.add('has-notch');
-      if (S.d < 0.02) { S.x = T.x; S.w = T.w; }
-    } else { T.d = 0; nav.classList.remove('has-notch'); }
-    if (snap || reduce) { K.forEach(k => { S[k] = T[k]; V[k] = 0; }); draw(); return; }
-    draw();
-    if (!raf && K.some(k => Math.abs(T[k] - S[k]) > EPS[k])) { last = performance.now(); raf = requestAnimationFrame(tick); }
-  }
-  // klik: bubble langsung pindah, halaman menyusul
-  box.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
-    window.__navLock = true; clearTimeout(lk); lk = setTimeout(() => { window.__navLock = false; }, 900);
-    box.querySelectorAll('a').forEach(l => l.classList.toggle('active', l === a));
+    if (!wasOpen) {
+      card.classList.add('open');
+      btn.setAttribute('aria-expanded', 'true');
+    }
   }));
-  addEventListener('scroll', () => {
-    if (window.__navLock) { clearTimeout(lk); lk = setTimeout(() => { window.__navLock = false; dispatchEvent(new Event('scroll')); }, 140); }
-  }, { passive: true });
 
-  new MutationObserver(() => measure(false)).observe(box, { attributes: true, attributeFilter: ['class'], subtree: true });
-  if ('ResizeObserver' in window) new ResizeObserver(() => measure(true)).observe(nav);
-  mq.addEventListener('change', () => measure(true));
-  addEventListener('load', () => measure(true));
-  if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => measure(true));
-  measure(true);
+  /* ------------------------------------------------------------------
+     6. Ripple pada tombol
+     ------------------------------------------------------------------ */
+  if (!reduceMotion) {
+    document.addEventListener('click', e => {
+      const btn = e.target.closest('.btn');
+      if (!btn || e.detail === 0) return; // abaikan klik dari keyboard
+      const rect = btn.getBoundingClientRect();
+      const ripple = document.createElement('span');
+      const size = Math.max(rect.width, rect.height);
+      ripple.className = 'origin-ripple';
+      ripple.style.cssText = `width:${size}px;height:${size}px;left:${e.clientX - rect.left}px;top:${e.clientY - rect.top}px`;
+      btn.appendChild(ripple);
+      setTimeout(() => ripple.remove(), 600);
+    });
+  }
+
+  /* ------------------------------------------------------------------
+     7. Tilt 3D — hanya untuk mouse (di HP tidak ada hover, hanya membebani)
+     ------------------------------------------------------------------ */
+  if (finePointer && !reduceMotion) {
+    $$('.tilt-card').forEach(card => {
+      let raf = 0, rect = null;
+      card.addEventListener('mouseenter', () => {
+        rect = card.getBoundingClientRect();
+        card.style.willChange = 'transform';
+        card.style.transition = 'transform 0.16s cubic-bezier(0.25, 0.46, 0.45, 0.94), box-shadow 0.3s ease';
+      });
+      card.addEventListener('mousemove', e => {
+        if (!rect) rect = card.getBoundingClientRect();
+        const rx = -((e.clientY - rect.top - rect.height / 2) / (rect.height / 2)) * 5.5;
+        const ry = ((e.clientX - rect.left - rect.width / 2) / (rect.width / 2)) * 5.5;
+        cancelAnimationFrame(raf);
+        raf = requestAnimationFrame(() => {
+          card.style.transition = 'transform 0.1s cubic-bezier(0.25, 0.46, 0.45, 0.94), box-shadow 0.25s ease';
+          card.style.transform = `perspective(1200px) rotateX(${rx.toFixed(2)}deg) rotateY(${ry.toFixed(2)}deg) translateY(-6px) scale3d(1.012, 1.012, 1.012)`;
+        });
+      });
+      card.addEventListener('mouseleave', () => {
+        cancelAnimationFrame(raf);
+        rect = null;
+        card.style.transition = 'transform 0.85s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.85s cubic-bezier(0.16, 1, 0.3, 1)';
+        card.style.transform = '';
+        setTimeout(() => { card.style.willChange = ''; }, 900);
+      });
+    });
+  }
+
+  /* ------------------------------------------------------------------
+     8. IntersectionObserver (dipakai peta)
+     ------------------------------------------------------------------ */
+  const hasIO = 'IntersectionObserver' in window;
+
+  /* ------------------------------------------------------------------
+     9. Peta Google dimuat saat hampir terlihat
+     ------------------------------------------------------------------ */
+  (function lazyMap() {
+    const box = $('#mapBox');
+    const frame = box && $('iframe[data-src]', box);
+    if (!frame) return;
+    const load = () => {
+      frame.src = frame.dataset.src;
+      frame.addEventListener('load', () => { const ph = $('.map-placeholder', box); if (ph) ph.remove(); }, { once: true });
+    };
+    if (!hasIO) return load();
+    const io = new IntersectionObserver(es => {
+      if (es.some(e => e.isIntersecting)) { io.disconnect(); load(); }
+    }, { rootMargin: '300px 0px' });
+    io.observe(box);
+  })();
+
+  /* ------------------------------------------------------------------
+     10. Anchor halus
+     ------------------------------------------------------------------ */
+  const navbar = $('#navbar');
+  const hero = $('.hero');
+  const bar = $('#scrollProgress');
+  const navLinks = $$('nav .links a[href^="#"]');
+  const secIds = ['profil', 'program', 'pembiasaan', 'fasilitas', 'galeri', 'lokasi', 'spmb', 'faq'];
+  const secs = secIds.map(id => document.getElementById(id)).filter(Boolean);
+
+  function scrollToId(id) {
+    const el = id === 'beranda' ? null : document.getElementById(id);
+    const pad = parseFloat(getComputedStyle(root).scrollPaddingTop) || 0;
+    const top = el ? el.getBoundingClientRect().top + scrollY - pad : 0;
+    scrollTo({ top, behavior: reduceMotion ? 'auto' : 'smooth' });
+    try { history.replaceState(null, '', '#' + id); } catch (_) { }
+  }
+  window.__scrollToId = scrollToId;
+
+  $$('a[href^="#"]').forEach(a => a.addEventListener('click', e => {
+    const id = a.getAttribute('href').slice(1);
+    if (!id || !document.getElementById(id)) return;
+    e.preventDefault();
+    scrollToId(id);
+    if (id !== 'beranda') {
+      const target = document.getElementById(id);
+      target.setAttribute('tabindex', '-1');
+      setTimeout(() => target.focus({ preventScroll: true }), 400);
+    }
+  }));
+
+  /* ------------------------------------------------------------------
+     11. Satu loop scroll ringan: navbar, progress bar, scrollspy (baca dulu → tulis)
+     ------------------------------------------------------------------ */
+  const scrollSubs = [];
+  let ticking = false;
+
+  function frame() {
+    ticking = false;
+    // ---------- BACA ----------
+    const y = scrollY, vh = innerHeight;
+    const docH = root.scrollHeight - vh;
+    const heroH = hero ? hero.offsetHeight : 0;
+    const secTops = secs.map(s => s.getBoundingClientRect().top);
+    // ---------- TULIS ----------
+    if (navbar) navbar.classList.toggle('scrolled', y > 30);
+    if (bar) bar.style.transform = 'scaleX(' + (docH > 0 ? Math.min(1, y / docH) : 0) + ')';
+    body.classList.toggle('past-hero', y > heroH * 0.6);
+    let cur = null;
+    secs.forEach((s, i) => { if (secTops[i] <= vh * 0.45) cur = s.id; });
+    if (!window.__navLock) navLinks.forEach(a => a.classList.toggle('active', a.getAttribute('href').slice(1) === cur));
+    scrollSubs.forEach(fn => fn(secTops, vh));
+  }
+  function requestFrame() { if (!ticking) { ticking = true; requestAnimationFrame(frame); } }
+  addEventListener('scroll', requestFrame, { passive: true });
+  addEventListener('resize', requestFrame);
+  addEventListener('load', requestFrame);
+  requestFrame();
+
+  /* ------------------------------------------------------------------
+     11b. Animasi scroll — GSAP + ScrollTrigger
+          Tanpa GSAP atau saat "kurangi animasi" aktif → konten langsung tampil apa adanya.
+          Tidak ada lagi section/kartu yang saling menimpa.
+     ------------------------------------------------------------------ */
+  (function motion() {
+    if (!hasGSAP) return;
+    const { gsap, ScrollTrigger } = window;
+    gsap.registerPlugin(ScrollTrigger);
+    const mm = gsap.matchMedia();
+
+    mm.add('(prefers-reduced-motion: no-preference)', () => {
+      const ease = 'power3.out';
+
+      // --- Intro hero: hanya saat tirai preloader tampil (kunjungan pertama) ---
+      if (curtainShown && !curtainLifted) {
+        const intro = gsap.timeline({ paused: true, defaults: { ease, duration: 0.95 } })
+          .from('.hero-inner > *', { y: 36, opacity: 0, stagger: 0.09 }, 0.2)
+          .from('.hero .orb.o1', { opacity: 0, duration: 0.8 }, 0.3)
+          .from('.hero .orb.o1 img', { scale: 0.6, rotation: -18, duration: 1.2, ease: 'back.out(1.7)' }, 0.3)
+          .from('.hero-architectural-title', { xPercent: -8, opacity: 0, duration: 1.3 }, 0.1);
+        onCurtainLift = () => intro.play();
+      }
+
+      // --- Bulatan hero: melayang pelan & terus-menerus (lintasan Lissajous, tanpa henti/patah) ---
+      const circle = $('.hero-circle');
+      if (circle) {
+        circle.style.animation = 'none';
+        const setX = gsap.quickSetter(circle, 'x', 'px');
+        const setY = gsap.quickSetter(circle, 'y', 'px');
+        const setS = gsap.quickSetter(circle, 'scale');
+        const TAU = Math.PI * 2;
+        let t0 = 0, running = false, visible = true, started = false;
+        const tick = () => {
+          const t = (performance.now() - t0) / 1000;
+          const ramp = Math.min(1, t / 2.5), k = ramp * ramp * (3 - 2 * ramp); // mulai lembut dari diam
+          const ax = Math.min(innerWidth * 0.06, 80), ay = Math.min(innerHeight * 0.06, 56);
+          setX(Math.sin(t * TAU / 17) * ax * k);   // periode panjang = gerak pelan (±30 px/dtk)
+          setY(Math.sin(t * TAU / 12) * ay * k);
+          setS(1 + Math.sin(t * TAU / 14) * 0.04 * k);
+        };
+        const sync = () => {
+          const on = started && visible;
+          if (on && !running) gsap.ticker.add(tick);
+          if (!on && running) gsap.ticker.remove(tick);
+          running = on;
+        };
+        const begin = () => { if (started) return; started = true; t0 = performance.now(); sync(); };
+        // hemat CPU: berhenti saat hero tidak terlihat
+        if ('IntersectionObserver' in window) {
+          new IntersectionObserver(es => { visible = es[0].isIntersecting; sync(); }).observe($('.hero'));
+        }
+        if (curtainShown && !curtainLifted) onCurtainDone = begin; else begin();
+      }
+
+      // --- Hero parallax (scrub) ---
+      gsap.timeline({ scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: 0.6 } })
+        .fromTo('.hero-parallax-bg', { scale: 1.1, yPercent: 0 }, { scale: 1.1, yPercent: 14, ease: 'none' }, 0)
+        .to('.hero-inner', { y: -80, opacity: 0.1, ease: 'none' }, 0)
+        .to('.hero-architectural-title', { x: -120, ease: 'none' }, 0)
+        .to('.hero .orb.o1', { '--orb-y': '-120px', ease: 'none' }, 0)
+        .to('.scroll-indicator', { opacity: 0, ease: 'none', duration: 0.15 }, 0);
+
+      // --- Judul section: chip → judul → deskripsi bergantian ---
+      gsap.utils.toArray('.section-head, .spmb-steps-head').forEach(head => {
+        gsap.from(head.children, {
+          y: 32, opacity: 0, duration: 0.9, ease, stagger: 0.1,
+          scrollTrigger: { trigger: head, start: 'top 86%', once: true }
+        });
+      });
+
+      // --- Kartu muncul berkelompok (ScrollTrigger.batch) ---
+      function reveal(sel, from, opts = {}) {
+        const els = gsap.utils.toArray(sel);
+        if (!els.length) return;
+        // transition CSS dimatikan sementara agar tidak "melawan" tween GSAP
+        gsap.set(els, Object.assign({ opacity: 0, transition: 'none' }, from));
+        ScrollTrigger.batch(els, {
+          start: opts.start || 'top 88%',
+          once: true,
+          onEnter: batch => gsap.to(batch, {
+            x: 0, y: 0, scale: 1, opacity: 1,
+            duration: opts.duration || 0.85, ease, stagger: opts.stagger || 0.09, overwrite: true,
+            onComplete: () => gsap.set(batch, { clearProps: 'transform,opacity,transition' })
+          })
+        });
+      }
+      reveal('.stats-card', { y: 40 }, { start: 'top 99%' });
+      reveal('.visi-card-hero, .misi-tile', { y: 40 });
+      reveal('.program-segmented-bar, .program-showcase-box', { y: 36 });
+      reveal('.timeline-card', { x: -36 }); // dari sisi garis timeline (kiri) — dari kanan bisa melebarkan halaman di HP
+      reveal('.facility-card', { y: 40 });
+      reveal('.galeri-item', { y: 50, scale: 0.94 }, { stagger: 0.06, duration: 0.9 });
+      reveal('.lokasi-card, .map-frame-box', { y: 40 });
+      reveal('.spmb-info-panel, .spmb-poster-box', { y: 40 });
+      reveal('.spmb-step', { y: 36 });
+      reveal('.faq-card', { y: 28 }, { stagger: 0.06 });
+
+      // --- Timeline pembiasaan: garis progres + titik aktif ---
+      const stack = $('.timeline-stack');
+      if (stack) {
+        gsap.fromTo('.timeline-line-fill', { scaleY: 0 }, {
+          scaleY: 1, ease: 'none',
+          scrollTrigger: { trigger: stack, start: 'top 62%', end: 'bottom 62%', scrub: 0.4 }
+        });
+        $$('.timeline-card', stack).forEach(card => ScrollTrigger.create({
+          trigger: card, start: 'top+=40 62%',
+          onEnter: () => card.classList.add('is-active'),
+          onLeaveBack: () => card.classList.remove('is-active')
+        }));
+      }
+
+      // --- Angka statistik menghitung naik ---
+      $$('.counter-num[data-target]').forEach(el => {
+        const o = { v: 0 }, target = parseInt(el.dataset.target, 10);
+        el.textContent = '0';
+        gsap.to(o, {
+          v: target, duration: 1.4, ease: 'power2.out',
+          scrollTrigger: { trigger: el, start: 'top 98%', once: true },
+          onUpdate: () => { el.textContent = Math.round(o.v); }
+        });
+      });
+
+      return () => { onCurtainLift = null; };
+    });
+
+    // Tinggi konten berubah (FAQ dibuka, font dimuat, dsb.) → hitung ulang posisi trigger
+    if ('ResizeObserver' in window) {
+      let t = 0;
+      const main = $('main');
+      if (main) new ResizeObserver(() => { clearTimeout(t); t = setTimeout(() => ScrollTrigger.refresh(), 250); }).observe(main);
+    }
+  })();
+
+  /* ------------------------------------------------------------------
+     12. Glass bottom nav (HP): bubble + cekungan bar yang bergeser
+     ------------------------------------------------------------------ */
+  (function bottomNav() {
+    const ITEMS = [
+      { id: 'beranda', label: 'Beranda', cover: ['beranda'], ic: '<path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/>' },
+      { id: 'profil', label: 'Profil', cover: ['profil'], ic: '<circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/>' },
+      { id: 'program', label: 'Program', cover: ['program', 'pembiasaan'], ic: '<path d="M2 5h6a4 4 0 0 1 4 4v12a3 3 0 0 0-3-3H2z"/><path d="M22 5h-6a4 4 0 0 0-4 4v12a3 3 0 0 1 3-3h7z"/>' },
+      { id: 'fasilitas', label: 'Fasilitas', cover: ['fasilitas', 'galeri', 'lokasi'], ic: '<rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 7h2M13 7h2M9 11h2M13 11h2M10 21v-4h4v4"/>' },
+      { id: 'spmb', label: 'Daftar SPMB', cover: ['spmb', 'faq'], ic: '<circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/>' }
+    ];
+    const nav = $('#gnav');
+    if (!nav) return;
+    const mq = matchMedia('(max-width: 959px)');
+    const T = 26, H = 60, R = 30, HW = 34, DEP = 26, BD = 46;
+    const so = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" ';
+
+    nav.innerHTML =
+      '<svg class="gnav-fx gnav-shadow" aria-hidden="true" preserveAspectRatio="none"><path id="gnShadow"/></svg>' +
+      '<div class="gnav-glass" id="gnGlass"></div>' +
+      '<svg class="gnav-fx" aria-hidden="true" preserveAspectRatio="none"><defs><linearGradient id="gnGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".75"/><stop offset="1" stop-color="#fff" stop-opacity=".2"/></linearGradient></defs><path id="gnEdge" fill="none" stroke="url(#gnGrad)" stroke-width="1.5"/></svg>' +
+      '<div class="gnav-items" id="gnItems">' + ITEMS.map((it, i) =>
+        '<button type="button" class="gnav-btn" data-i="' + i + '" aria-label="' + it.label + '" title="' + it.label + '">' + so + 'class="ic">' + it.ic + '</svg></button>').join('') + '</div>' +
+      '<div class="gnav-bubble" id="gnBubble" aria-hidden="true">' + ITEMS.map((it, i) => so + 'class="bi" data-i="' + i + '">' + it.ic + '</svg>').join('') + '</div>';
+
+    const glass = $('#gnGlass'), edgeP = $('#gnEdge'), shP = $('#gnShadow');
+    const itemsEl = $('#gnItems'), bubble = $('#gnBubble');
+    const btns = Array.from(itemsEl.children), bis = Array.from(bubble.children), fx = $$('.gnav-fx', nav);
+    let W = 0, centers = [], active = 0, x = 0, v = 0, tx = 0, raf = 0, last = 0;
+
+    function barPath(cx) {
+      cx = Math.max(R + HW, Math.min(W - R - HW, cx));
+      const sx = cx - HW, ex = cx + HW, by = T + DEP;
+      return 'M' + R + ',' + T + 'H' + sx + 'C' + (sx + 18) + ',' + T + ' ' + (cx - 26) + ',' + by + ' ' + cx + ',' + by +
+        'C' + (cx + 26) + ',' + by + ' ' + (ex - 18) + ',' + T + ' ' + ex + ',' + T + 'H' + (W - R) +
+        'A' + R + ',' + R + ' 0 0 1 ' + (W - R) + ',' + (T + H) + 'H' + R + 'A' + R + ',' + R + ' 0 0 1 ' + R + ',' + T + 'Z';
+    }
+    function draw() {
+      if (!W) return;
+      const d = barPath(x);
+      glass.style.clipPath = "path('" + d + "')";
+      edgeP.setAttribute('d', d); shP.setAttribute('d', d);
+      const st = Math.min(0.16, Math.abs(v) / 3600);
+      bubble.style.transform = 'translate3d(' + (x - BD / 2) + 'px,0,0) scale(' + (1 + st) + ',' + (1 - st * 0.7) + ')';
+    }
+    function tick(t) {
+      const dt = Math.min(0.033, (t - last) / 1000 || 0.016); last = t;
+      v += (190 * (tx - x) - 21 * v) * dt; x += v * dt; draw();
+      if (Math.abs(tx - x) < 0.15 && Math.abs(v) < 2) { x = tx; v = 0; draw(); raf = 0; return; }
+      raf = requestAnimationFrame(tick);
+    }
+    function go() {
+      if (reduceMotion) { x = tx; v = 0; draw(); return; }
+      if (!raf && W) { last = performance.now(); raf = requestAnimationFrame(tick); }
+    }
+    function layout() {
+      if (!mq.matches) { W = 0; return; }
+      W = nav.getBoundingClientRect().width; if (!W) return;
+      const pad = Math.max(12, (R + HW + 2 - W / 10) / 0.8);
+      itemsEl.style.setProperty('--pad', pad + 'px');
+      centers = btns.map(b => b.offsetLeft + b.offsetWidth / 2);
+      fx.forEach(s => s.setAttribute('viewBox', '0 0 ' + W + ' ' + (T + H)));
+      x = tx = centers[active]; v = 0; draw();
+    }
+    function setActive(i) {
+      if (i === active) return;
+      active = i;
+      btns.forEach((b, j) => { b.classList.toggle('is-active', j === i); j === i ? b.setAttribute('aria-current', 'true') : b.removeAttribute('aria-current'); });
+      bis.forEach((el, j) => el.classList.toggle('on', j === i));
+      if (W) { tx = centers[i]; go(); }
+    }
+
+    let locked = false, lt = 0;
+    scrollSubs.push(secTops => {
+      if (locked || !W) return;
+      let cur = 'beranda';
+      secs.forEach((s, i) => { if (secTops[i] <= innerHeight * 0.5) cur = s.id; });
+      const i = ITEMS.findIndex(it => it.cover.includes(cur));
+      if (i >= 0) setActive(i);
+    });
+    addEventListener('scroll', () => {
+      if (locked) { clearTimeout(lt); lt = setTimeout(() => { locked = false; requestFrame(); }, 140); }
+    }, { passive: true });
+
+    btns.forEach((b, i) => b.addEventListener('click', () => {
+      locked = true; clearTimeout(lt); lt = setTimeout(() => { locked = false; requestFrame(); }, 900);
+      setActive(i);
+      scrollToId(ITEMS[i].id);
+    }));
+
+    btns[0].classList.add('is-active'); btns[0].setAttribute('aria-current', 'true'); bis[0].classList.add('on');
+    layout();
+    if ('ResizeObserver' in window) new ResizeObserver(layout).observe(nav); else addEventListener('resize', layout);
+    mq.addEventListener('change', layout);
+  })();
+
+  /* ------------------------------------------------------------------
+     13. Navbar desktop: cekungan + bubble yang meluncur ke menu aktif
+     ------------------------------------------------------------------ */
+  (function desktopNotch() {
+    const nav = navbar, box = nav && $('.links', nav);
+    if (!box) return;
+    const mq = matchMedia('(min-width:960px)');
+    nav.insertAdjacentHTML('afterbegin',
+      '<svg class="nb-fx nb-shadow" aria-hidden="true" preserveAspectRatio="none"><path/></svg><div class="nb-glass"></div>' +
+      '<svg class="nb-fx" aria-hidden="true" preserveAspectRatio="none"><defs><linearGradient id="nbGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".8"/><stop offset="1" stop-color="#fff" stop-opacity=".22"/></linearGradient></defs><path fill="none" stroke="url(#nbGrad)" stroke-width="1.5"/></svg>');
+    const bubble = document.createElement('div'); bubble.className = 'nb-bubble'; bubble.setAttribute('aria-hidden', 'true');
+    const txt = document.createElement('span'); bubble.appendChild(txt); nav.appendChild(bubble);
+    const [shP, edP] = $$('.nb-fx path', nav), glass = $('.nb-glass', nav), fxs = $$('.nb-fx', nav);
+    const BH = 34, DEP = 19, K = ['x', 'w', 'd'];
+    const S = { x: 0, w: 90, d: 0 }, V = { x: 0, w: 0, d: 0 }, T = { x: 0, w: 90, d: 0 };
+    const EPS = { x: 0.15, w: 0.15, d: 0.003 }, VEPS = { x: 2, w: 2, d: 0.05 };
+    let W = 0, H = 0, raf = 0, last = 0, lk = 0;
+
+    function path() {
+      const R = H / 2, cx = S.x, flat = Math.max(0, S.w / 2 - 6), hw = flat + 30, by = H - DEP * Math.max(0, S.d);
+      const sx = cx - hw, ex = cx + hw;
+      return 'M' + R + ',0H' + (W - R) + 'A' + R + ',' + R + ' 0 0 1 ' + (W - R) + ',' + H + 'H' + ex +
+        'C' + (ex - 16) + ',' + H + ' ' + (cx + flat + 14) + ',' + by + ' ' + (cx + flat) + ',' + by + 'H' + (cx - flat) +
+        'C' + (cx - flat - 14) + ',' + by + ' ' + (sx + 16) + ',' + H + ' ' + sx + ',' + H + 'H' + R +
+        'A' + R + ',' + R + ' 0 0 1 ' + R + ',0Z';
+    }
+    function draw() {
+      const p = path(); glass.style.clipPath = "path('" + p + "')"; edP.setAttribute('d', p); shP.setAttribute('d', p);
+      const st = Math.min(0.14, Math.abs(V.x) / 4500), sc = Math.max(0, S.d);
+      bubble.style.opacity = Math.min(1, sc * 1.4); bubble.style.width = S.w + 'px';
+      bubble.style.transform = 'translate3d(' + (S.x - S.w / 2) + 'px,' + (H - BH / 2 + 2) + 'px,0) scale(' + (sc * (1 + st)) + ',' + (sc * (1 - st * 0.6)) + ')';
+    }
+    function tick(t) {
+      const dt = Math.min(0.033, (t - last) / 1000 || 0.016); last = t; let moving = false;
+      K.forEach(k => {
+        const kk = k === 'd' ? 220 : 190, cc = k === 'd' ? 24 : 21;
+        V[k] += (kk * (T[k] - S[k]) - cc * V[k]) * dt; S[k] += V[k] * dt;
+        if (Math.abs(T[k] - S[k]) > EPS[k] || Math.abs(V[k]) > VEPS[k]) moving = true;
+      });
+      if (!moving) { K.forEach(k => { S[k] = T[k]; V[k] = 0; }); draw(); raf = 0; return; }
+      draw(); raf = requestAnimationFrame(tick);
+    }
+    function measure(snap) {
+      if (!mq.matches) return;
+      // Lapisan glass/garis tepi diposisikan absolut di dalam padding-box navbar.
+      // Ukur lapisan glass itu sendiri dengan nilai pecahan (getBoundingClientRect) — clientWidth/Height
+      // dibulatkan, dan selisih sekecil 0,3px membuat SVG mengecil & bergeser dari clip-path glass.
+      const gr = glass.getBoundingClientRect();
+      W = gr.width; H = gr.height; if (!W) return;
+      fxs.forEach(s => s.setAttribute('viewBox', '0 0 ' + W + ' ' + H));
+      const a = $('a.active', box);
+      if (a) {
+        const r = a.getBoundingClientRect();
+        T.x = r.left - gr.left + r.width / 2; T.w = Math.max(70, r.width + 16); T.d = 1;
+        txt.textContent = a.textContent.trim(); nav.classList.add('has-notch');
+        if (S.d < 0.02) { S.x = T.x; S.w = T.w; }
+      } else { T.d = 0; nav.classList.remove('has-notch'); }
+      if (snap || reduceMotion) { K.forEach(k => { S[k] = T[k]; V[k] = 0; }); draw(); return; }
+      draw();
+      if (!raf && K.some(k => Math.abs(T[k] - S[k]) > EPS[k])) { last = performance.now(); raf = requestAnimationFrame(tick); }
+    }
+    $$('a', box).forEach(a => a.addEventListener('click', () => {
+      window.__navLock = true; clearTimeout(lk); lk = setTimeout(() => { window.__navLock = false; }, 900);
+      $$('a', box).forEach(l => l.classList.toggle('active', l === a));
+    }));
+    addEventListener('scroll', () => {
+      if (window.__navLock) { clearTimeout(lk); lk = setTimeout(() => { window.__navLock = false; requestFrame(); }, 140); }
+    }, { passive: true });
+
+    new MutationObserver(() => measure(false)).observe(box, { attributes: true, attributeFilter: ['class'], subtree: true });
+    if ('ResizeObserver' in window) new ResizeObserver(() => measure(true)).observe(nav);
+    mq.addEventListener('change', () => measure(true));
+    addEventListener('load', () => measure(true));
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => measure(true));
+    measure(true);
+  })();
 })();
