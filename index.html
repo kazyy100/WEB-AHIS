@@ -4,7 +4,12 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>SMP Al Haudh – Sekolah Islam Terpadu &amp; Life Skills | Ciater, Serpong</title>
+  <!-- Keamanan: hanya sumber yang terdaftar di bawah yang boleh dimuat/dijalankan.
+       PENTING: bila isi <script> inline di <head> diubah, hash sha256 di script-src harus diperbarui. -->
+  <meta http-equiv="Content-Security-Policy"
+    content="default-src 'self'; script-src 'self' 'sha256-XEiFZ/QQqOHlqYuBul+pHpyI8wHYPKrGrKkEW0+HRzE='; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; frame-src https://www.google.com; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <title>SMP Al Haudh – Sekolah Islam Terpadu &amp; Life Skills, Ciater</title>
   <meta name="description"
     content="SMP Al Haudh Islamic School Ciater, Serpong. SMP Islam terpadu bermanhaj Salafus Shalih: tahfizh 5 juz bersanad, kurikulum nasional, kelas ikhwan & akhwat terpisah. SPMB 2027/2028 Gelombang 1 hemat Rp 3 juta.">
   <meta name="theme-color" content="#05160A">
@@ -38,7 +43,7 @@
     href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap"
     rel="stylesheet">
 
-  <link rel="stylesheet" href="style.css?v=13">
+  <link rel="stylesheet" href="style.css?v=14">
 
   <!-- Animasi pembuka hanya tampil sekali per sesi & dilewati bila pengguna memilih kurangi animasi.
        Tambahkan ?intro di URL untuk memaksa animasi tampil lagi (berguna saat mengetes). -->
@@ -195,7 +200,7 @@
   </nav>
 
   <!-- Mobile Glass Drawer -->
-  <div id="mobileMenu" class="mobile-menu-drawer" aria-label="Menu navigasi">
+  <div id="mobileMenu" class="mobile-menu-drawer" role="navigation" aria-label="Menu navigasi">
     <div class="mobile-menu-header">
       <span class="mobile-menu-title">NAVIGASI SEKOLAH</span>
       <button type="button" class="mobile-menu-close" data-menu-close aria-label="Tutup menu">
@@ -833,7 +838,7 @@
                 <span class="cut"><span class="sr-only">harga normal </span>Rp&nbsp;15.000.000</span>
               </div>
 
-              <ul class="spmb-waves" aria-label="Biaya masuk per gelombang">
+              <ul class="spmb-waves" role="list" aria-label="Biaya masuk per gelombang">
                 <li class="is-current"><span>Gelombang 1 <small>Sep – Des 2026</small></span><b>Rp 12.000.000</b></li>
                 <li><span>Gelombang 2 <small>Jan – Mar 2027</small></span><b>Rp 15.000.000</b></li>
                 <li><span>Gelombang 3 <small>s.d. 31 Mei 2027</small></span><b>Rp 15.000.000</b></li>
@@ -1176,7 +1181,7 @@
         <svg width="20" height="20" aria-hidden="true"><use href="#i-close" /></svg>
       </button>
       <div class="cinema-stage">
-        <img id="cinemaImg" alt="" decoding="async">
+        <img id="cinemaImg" src="img/foto4-1080.webp" alt="" decoding="async" loading="lazy">
       </div>
       <div class="cinema-bar">
         <div>
@@ -1199,7 +1204,7 @@
   <!-- GSAP + ScrollTrigger (disimpan lokal di /vendor, tanpa CDN pihak ketiga) -->
   <script src="vendor/gsap.min.js" defer></script>
   <script src="vendor/ScrollTrigger.min.js" defer></script>
-  <script src="script.js?v=13" defer></script>
+  <script src="script.js?v=14" defer></script>
 </body>
 
 </html>

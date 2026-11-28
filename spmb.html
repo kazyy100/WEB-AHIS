@@ -4,6 +4,10 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <!-- Keamanan: halaman ini tidak memakai JavaScript sama sekali → script diblokir total -->
+  <meta http-equiv="Content-Security-Policy"
+    content="default-src 'self'; script-src 'none'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
   <title>Pendaftaran SPMB 2027/2028 – SMP Al Haudh Islamic School</title>
   <meta name="description"
     content="Info pendaftaran SPMB 2027/2028 SMP Al Haudh Islamic School, Ciater, Serpong. Gelombang 1 (Sep–Des 2026) hemat Rp 3 juta. Biaya per gelombang, jam layanan, dan kontak WhatsApp panitia.">
@@ -230,8 +234,8 @@
       <span class="promo">PROMO GELOMBANG 1 &bull; HEMAT RP 3 JUTA</span>
       <h1>Informasi Pendaftaran SPMB</h1>
       <p style="color: #4d6b3a;">Penerimaan Peserta Didik Baru (SPMB) SMP Al Haudh Islamic School Ciater, Serpong.</p>
-      
-      <ul class="waves" aria-label="Biaya masuk per gelombang">
+
+      <ul class="waves" role="list" aria-label="Biaya masuk per gelombang">
         <li class="now"><span>Gelombang 1 <small>(Sep – Des 2026)</small></span><b>Rp 12.000.000 <s style="opacity:.6;font-weight:400">Rp 15.000.000</s></b></li>
         <li><span>Gelombang 2 <small>(Jan – Mar 2027)</small></span><b>Rp 15.000.000</b></li>
         <li><span>Gelombang 3 <small>(s.d. 31 Mei 2027)</small></span><b>Rp 15.000.000</b></li>

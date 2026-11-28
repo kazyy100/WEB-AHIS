@@ -17,6 +17,10 @@
   const finePointer = matchMedia('(hover: hover) and (pointer: fine)').matches;
   const hasGSAP = !!(window.gsap && window.ScrollTrigger);
   let curtainShown = false, curtainLifted = false, onCurtainLift = null, onCurtainDone = null;
+  // Waktu aktivitas scroll terakhir (scroll pengguna ATAU scroll halus dari klik menu).
+  // Dipakai agar ScrollTrigger.refresh() tidak memotong scroll yang sedang berjalan.
+  let lastScrollActivity = 0;
+  addEventListener('scroll', () => { lastScrollActivity = performance.now(); }, { passive: true });
 
   /* ------------------------------------------------------------------
      0. Welcoming animation (preloader) — sederhana & linear
@@ -496,6 +500,7 @@
     const el = id === 'beranda' ? null : document.getElementById(id);
     const pad = parseFloat(getComputedStyle(root).scrollPaddingTop) || 0;
     const top = el ? el.getBoundingClientRect().top + scrollY - pad : 0;
+    lastScrollActivity = performance.now(); // tandai sejak awal: scroll halus butuh beberapa frame sebelum mulai
     scrollTo({ top, behavior: reduceMotion ? 'auto' : 'smooth' });
     try { history.replaceState(null, '', '#' + id); } catch (_) { }
   }
@@ -674,11 +679,21 @@
       return () => { onCurtainLift = null; };
     });
 
-    // Tinggi konten berubah (FAQ dibuka, font dimuat, dsb.) → hitung ulang posisi trigger
+    // Tinggi konten berubah (FAQ dibuka, font dimuat, scrollbar hilang/muncul saat modal) →
+    // hitung ulang posisi trigger. TAPI jangan saat halaman sedang di-scroll atau modal terbuka:
+    // refresh memindah-mindah posisi scroll untuk mengukur, sehingga scroll halus (klik menu)
+    // terpotong & berhenti di tengah jalan.
     if ('ResizeObserver' in window) {
       let t = 0;
+      const safeRefresh = () => {
+        clearTimeout(t);
+        t = setTimeout(() => {
+          if (performance.now() - lastScrollActivity < 400 || openModalEl) return safeRefresh(); // tunggu tenang
+          ScrollTrigger.refresh();
+        }, 250);
+      };
       const main = $('main');
-      if (main) new ResizeObserver(() => { clearTimeout(t); t = setTimeout(() => ScrollTrigger.refresh(), 250); }).observe(main);
+      if (main) new ResizeObserver(safeRefresh).observe(main);
     }
   })();
 
