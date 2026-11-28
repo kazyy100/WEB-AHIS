@@ -84,9 +84,14 @@
         W = text.offsetWidth;
       };
       const measureTarget = () => {
-        if (!orb) { target = { x: 0, y: 0 }; return; }
-        const r = orb.getBoundingClientRect();
-        target = { x: r.left + r.width / 2 - innerWidth / 2, y: r.top + r.height / 2 - innerHeight / 2 };
+        const r = orb && orb.getBoundingClientRect();
+        // Bola logo di luar layar (halaman dibuka langsung di bagian bawah, mis. #lokasi)?
+        // → bulatan cukup diam & memudar di tempat, tidak terbang keluar layar.
+        if (!r || r.bottom < 0 || r.top > innerHeight) {
+          target = { x: -(gap + W) / 2, y: 0, scale: d / S, onScreen: false };
+          return;
+        }
+        target = { x: r.left + r.width / 2 - innerWidth / 2, y: r.top + r.height / 2 - innerHeight / 2, scale: 1, onScreen: true };
       };
 
       const ease = 'power3.inOut';
@@ -111,10 +116,11 @@
         .to(text, { opacity: 0, duration: 0.35, ease: 'power2.in' }, 'exit')
         .call(startHero, null, 'exit+=0.2')
         .to(bg, { opacity: 0, duration: 0.85, ease: 'power2.inOut' }, 'exit+=0.15')
-        .to(dot, { x: () => target.x, y: () => target.y, scale: 1, duration: 1.15, ease }, 'exit')
+        .to(dot, { x: () => target.x, y: () => target.y, scale: () => target.scale, duration: 1.15, ease }, 'exit')
         .to(dot, { backgroundColor: '#EDF4E9', duration: 0.9, ease: 'power1.inOut' }, 'exit+=0.2')
         .to(orb || {}, { opacity: 1, duration: 0.45, ease: 'power1.out' }, 'exit+=0.85')
-        .to(dot, { opacity: 0, duration: 0.4, ease: 'power1.in' }, 'exit+=0.95');
+        .to(dot, { opacity: 0, duration: 0.4, ease: 'power1.in' }, 'exit+=0.95')
+        .to(dot, { opacity: () => (target.onScreen ? 1 : 0), duration: 0.45, ease: 'power1.out' }, 'exit');
 
       // Mulai setelah font siap (maks. 0,7 dtk) agar lebar tulisan terukur tepat
       const fontsReady = document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve();
@@ -595,12 +601,15 @@
       }
 
       // --- Hero parallax (scrub) ---
+      // Semua memakai fromTo dengan nilai awal eksplisit. Dengan .to(), bila halaman dibuka/di-reload
+      // dalam posisi sudah di bawah (mis. #lokasi), nilai awal tercatat keliru → teks hero tetap
+      // pudar & tergeser saat kembali ke atas.
       gsap.timeline({ scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: 0.6 } })
         .fromTo('.hero-parallax-bg', { scale: 1.1, yPercent: 0 }, { scale: 1.1, yPercent: 14, ease: 'none' }, 0)
-        .to('.hero-inner', { y: -80, opacity: 0.1, ease: 'none' }, 0)
-        .to('.hero-architectural-title', { x: -120, ease: 'none' }, 0)
-        .to('.hero .orb.o1', { '--orb-y': '-120px', ease: 'none' }, 0)
-        .to('.scroll-indicator', { opacity: 0, ease: 'none', duration: 0.15 }, 0);
+        .fromTo('.hero-inner', { y: 0, opacity: 1 }, { y: -80, opacity: 0.1, ease: 'none' }, 0)
+        .fromTo('.hero-architectural-title', { x: 0 }, { x: -120, ease: 'none' }, 0)
+        .fromTo('.hero .orb.o1', { '--orb-y': '0px' }, { '--orb-y': '-120px', ease: 'none' }, 0)
+        .fromTo('.scroll-indicator', { opacity: 1 }, { opacity: 0, ease: 'none', duration: 0.15 }, 0);
 
       // --- Judul section: chip → judul → deskripsi bergantian ---
       gsap.utils.toArray('.section-head, .spmb-steps-head').forEach(head => {

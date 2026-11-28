@@ -80,7 +80,9 @@
 }
 
 html {
-  scroll-behavior: smooth;
+  /* JANGAN pakai scroll-behavior: smooth di sini — mengacaukan pengukuran GSAP ScrollTrigger
+     saat halaman dibuka/di-reload dalam posisi sudah di bawah (teks hero jadi pudar & tergeser).
+     Scroll halus untuk klik menu sudah ditangani JavaScript (scrollTo behavior: 'smooth'). */
   scroll-padding-top: 86px;
   background: var(--forest-900);
 }
