@@ -80,7 +80,9 @@
 }
 
 html {
-  scroll-behavior: smooth;
+  /* JANGAN pakai scroll-behavior: smooth di sini — mengacaukan pengukuran GSAP ScrollTrigger
+     saat halaman dibuka/di-reload dalam posisi sudah di bawah (teks hero jadi pudar & tergeser).
+     Scroll halus untuk klik menu sudah ditangani JavaScript (scrollTo behavior: 'smooth'). */
   scroll-padding-top: 86px;
   background: var(--forest-900);
 }
@@ -101,7 +103,8 @@ body.preloader-active {
 /* =========================================================================
    0. WELCOMING ANIMATION (digerakkan GSAP di script.js) — sederhana & linear:
    bulatan muncul → bergeser ke samping sambil "AL HAUDH" terbuka →
-   latar memudar, bulatan pindah ke hero (.hero-circle) dan terus melayang.
+   latar memudar, bulatan terbang & berubah menjadi bola logo di hero (.orb.o1),
+   yang lalu terus bergerak pelan.
    ========================================================================= */
 #app-preloader {
   position: fixed;
@@ -135,7 +138,7 @@ body.preloader-active {
   background: var(--forest-800);
 }
 
-/* Ukuran elemen = ukuran akhir bulatan di hero; saat intro tampil diperkecil (scale)
+/* Ukuran elemen = ukuran bola logo di hero; saat intro tampil diperkecil (scale)
    supaya tetap tajam ketika membesar. */
 .pl-dot {
   position: absolute;
@@ -170,44 +173,6 @@ body.preloader-active {
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.6s ease;
-}
-
-/* =========================================================================
-   Bulatan di hero: kelanjutan bulatan intro, melayang pelan di belakang konten
-   (gerakan digerakkan GSAP; animasi CSS di bawah hanya cadangan tanpa GSAP)
-   ========================================================================= */
-.hero-circle {
-  --hc: clamp(240px, 30vw, 430px);
-  position: absolute;
-  z-index: 2;
-  left: 64%;
-  top: 40%;
-  width: var(--hc);
-  height: var(--hc);
-  margin: calc(var(--hc) / -2) 0 0 calc(var(--hc) / -2); /* pusat di (left, top) tanpa translate */
-  border-radius: 50%;
-  background: var(--accent-lime);
-  opacity: 0.14;
-  pointer-events: none;
-  animation: heroCircleFloat 14s ease-in-out infinite;
-}
-
-@keyframes heroCircleFloat {
-  0%, 100% { transform: translate(0, 0); }
-  33% { transform: translate(4vw, -3vh); }
-  66% { transform: translate(-3vw, 3vh); }
-}
-
-@media (max-width: 580px) {
-  .hero-circle {
-    --hc: 62vw;
-    left: 74%;
-    top: 22%;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .hero-circle { animation: none; }
 }
 
 /* Ambient atmospheric background textures for glassmorphism refraction */
